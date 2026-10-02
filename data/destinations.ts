@@ -1,3 +1,4 @@
+import { placePhotos } from './photos';
 export type DestinationGroup = 'Lakes' | 'Mountains and Valleys' | 'Historic Cities';
 export type Destination = {
   slug: string; name: string; group: DestinationGroup; lat: number; lng: number;
@@ -19,9 +20,13 @@ const base: Array<Omit<Destination, 'region' | 'coordinates' | 'highlights' | 'b
   { slug: 'khujand', name: 'Khujand', group: 'Historic Cities', lat: 40.28, lng: 69.62, description: 'A city on the Syr Darya in northern Tajikistan.', image: '/placeholders/destination.jpg' },
 ];
 // Editorial detail fields remain explicit placeholders until the operator verifies each place.
-export const destinations: Destination[] = base.map((place) => ({
-  ...place, region: '[Region to confirm]', coordinates: { lat: place.lat, lng: place.lng },
-  highlights: ['[Local highlights to confirm]', '[Activities and access to confirm]', '[Cultural context to confirm]'],
-  bestSeason: '[Best season to confirm]', howToGetThere: '[Route and transport to confirm with the local team]',
-  gallery: [place.image, '/placeholders/hero.jpg', '/placeholders/lakes.jpg'],
-}));
+export const destinations: Destination[] = base.map((place) => {
+  const photos = placePhotos[place.slug] ?? [];
+  const image = photos[0]?.src ?? place.image;
+  return {
+    ...place, image, region: '[Region to confirm]', coordinates: { lat: place.lat, lng: place.lng },
+    highlights: ['[Local highlights to confirm]', '[Activities and access to confirm]', '[Cultural context to confirm]'],
+    bestSeason: '[Best season to confirm]', howToGetThere: '[Route and transport to confirm with the local team]',
+    gallery: photos.map((photo) => photo.src),
+  };
+});

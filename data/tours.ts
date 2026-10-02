@@ -1,3 +1,4 @@
+import { tourPhotos } from './photos';
 export type TourCategory = 'trekking' | 'driving';
 export type TourDay = { day: number; title: string; description: string; overnight: string };
 export type TourFAQ = { question: string; answer: string };
@@ -19,10 +20,6 @@ const placeholderFAQ: TourFAQ[] = [
   { question: 'How difficult is this trip?', answer: '[Placeholder] Ask the team for the route, conditions and fitness guidance for your dates.' },
   { question: 'Can the itinerary change?', answer: '[Placeholder] Discuss your dates and interests directly with the team before confirming.' },
 ];
-const media = {
-  driving: ['/placeholders/4x4.jpg', '/placeholders/hero.jpg', '/placeholders/destination.jpg'],
-  trekking: ['/placeholders/lakes.jpg', '/placeholders/fan.jpg', '/placeholders/snow.jpg'],
-};
 const base = [
   { slug: 'pamir-highway-4x4', title: '4x4 Tour', category: 'driving', price: 1510, destinations: ['khorog', 'murgab', 'karakul'] },
   { slug: 'pamir-classical-4x4', title: 'Pamir Classical 4x4', category: 'driving', price: 1432, destinations: ['khorog', 'wakhan-ishkashim', 'murgab'] },
@@ -40,7 +37,7 @@ export const tours: Tour[] = base.map((tour) => ({
   ...tour, days: null, distance: null, maxAltitude: null, difficulty: null, season: null, groupSize: null,
   hook: `[Placeholder] Explore the ${tour.title} route with a local team.`,
   overview: `[Placeholder] The exact route, pace and travel arrangements for ${tour.title} will be confirmed with the operator before booking.`,
-  gallery: media[tour.category], itinerary: [1, 2, 3].map(placeholderDay),
+  gallery: (tourPhotos[tour.slug] ?? []).map((photo) => photo.src), itinerary: [1, 2, 3].map(placeholderDay),
   included: ['[Transport arrangements to confirm]', '[Accommodation and meals to confirm]', '[Guide and permit arrangements to confirm]'],
   excluded: ['[Personal expenses to confirm]', '[Flights and insurance to confirm]'],
   gear: ['[Clothing suited to confirmed season]', '[Footwear suited to confirmed activities]', '[Personal medication and essentials]'],

@@ -1,7 +1,7 @@
 export const pages = {
   gallery: {
     eyebrow: 'THE PAMIRS IN FRAMES', title: 'The landscapes behind the journey',
-    intro: 'An illustrative gallery while the team selects approved photographs from real journeys.',
+    intro: 'Photographs from Pamir Ecotourism journeys: lakes, mountain roads, treks and the people who host them.',
     categories: ['All', 'Lakes', 'Mountains', 'Treks', '4x4 and Roads', 'People and Culture'] as const,
     filterLabel: 'Filter gallery images', open: 'Open image', close: 'Close image', previous: 'Previous image', next: 'Next image', image: 'Image',
     ctaTitle: 'Want to see it in person? Plan your trip.', ctaButton: 'Plan your trip',

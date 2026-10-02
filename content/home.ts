@@ -1,9 +1,13 @@
+import { heroSlides, homeGlimpse, tourPhotos } from '@/data/photos';
+
 export const home = {
   hero: {
     eyebrow: 'PAMIR ECOTOURISM · TAJIKISTAN',
     title: 'Where the Roof of the World begins.',
     subtitle: 'Small-group expeditions led by Pamiri locals, from the family home base in Rushan, GBAO.',
     explore: 'Explore Tours', plan: 'Plan my trip', scroll: 'Scroll to explore',
+    slides: heroSlides,
+    previous: 'Previous photograph', next: 'Next photograph', slide: 'Show photograph',
   },
   trust: [
     { value: '[X] years', label: 'Experience · to confirm' },
@@ -39,7 +43,7 @@ export const home = {
     badges: ['TripAdvisor [add real badge]', 'Google [add real badge]', 'Licensed operator [add real badge]'],
     placeholder: 'PLACEHOLDER · NOT A REAL REVIEW', previous: 'Previous review', next: 'Next review',
   },
-  team: { eyebrow: 'THE PEOPLE', title: 'Meet your hosts', intro: 'The people behind your journey. Portraits, bios and languages await confirmation.', languages: 'Languages', instagram: 'Instagram profile' },
+  team: { eyebrow: 'THE PEOPLE', title: 'Meet your hosts', intro: 'The people behind your journey, photographed for Pamir Ecotourism.', languages: 'Languages', instagram: 'Instagram profile' },
   process: {
     eyebrow: 'YOUR NEXT STEPS', title: 'How it works',
     steps: [
@@ -52,16 +56,7 @@ export const home = {
     bullets: ['Some Pamir routes may involve a GBAO permit; confirm the requirements for your route and nationality.', 'Check your visa requirements before travel with the relevant official authority.', 'Ask for a written list of transport, accommodation, meals and exclusions for your chosen trip.'],
     infoLink: 'Ask us a question',
   },
-  gallery: { items: [
-    { src: '/placeholders/hero.jpg', alt: 'Illustrative placeholder: mountain horizon' },
-    { src: '/placeholders/lakes.jpg', alt: 'Illustrative placeholder: mountain lake landscape' },
-    { src: '/placeholders/4x4.jpg', alt: 'Illustrative placeholder: high mountain road' },
-    { src: '/placeholders/fan.jpg', alt: 'Illustrative placeholder: Fan Mountains landscape' },
-    { src: '/placeholders/cross.jpg', alt: 'Illustrative placeholder: remote mountain trail' },
-    { src: '/placeholders/snow.jpg', alt: 'Illustrative placeholder: snow mountain scenery' },
-    { src: '/placeholders/destination.jpg', alt: 'Illustrative placeholder: Pamir valley landscape' },
-    { src: '/placeholders/hero.jpg', alt: 'Illustrative placeholder: broad mountain panorama' },
-  ], eyebrow: 'THE VIEW', title: 'Glimpses of the Pamirs', intro: 'Illustrative images for layout only. Approved destination photography will replace these.', full: 'View full gallery', open: 'Open image', close: 'Close gallery image', previous: 'Previous image', next: 'Next image', counter: 'Image', placeholder: 'Illustrative placeholder image' },
+  gallery: { items: homeGlimpse, eyebrow: 'THE VIEW', title: 'Glimpses of the Pamirs', intro: 'Photographs from the lakes, roads and valleys on our journeys.', full: 'View full gallery', open: 'Open image', close: 'Close gallery image', previous: 'Previous image', next: 'Next image', counter: 'Image' },
   inquiry: {
     eyebrow: 'START A CONVERSATION', title: "Tell us your dream route. We'll shape the trip.", reply: '[Reply within 24 hours — to confirm with the team.]',
     steps: ['Trip', 'Details', 'Contact'], next: 'Continue', back: 'Back', submit: 'Send inquiry', sending: 'Sending…',
@@ -78,10 +73,10 @@ export const home = {
 } as const;
 
 export const featuredTourMedia: Record<string, { image: string; hook: string }> = {
-  'pamir-highway-4x4': { image: '/placeholders/4x4.jpg', hook: 'Take the high road into the heart of the Pamirs.' },
-  'mountain-lakes-trekking': { image: '/placeholders/lakes.jpg', hook: 'Walk toward the stillness of mountain lakes.' },
-  'fan-mountain-lakes': { image: '/placeholders/fan.jpg', hook: 'A journey shaped by the Fan Mountains and their lakes.' },
-  'snow-leopard-tour': { image: '/placeholders/snow.jpg', hook: 'Explore high-altitude landscapes with a local team.' },
-  'cross-border-trekking': { image: '/placeholders/cross.jpg', hook: 'Follow mountain trails across changing terrain.' },
+  'pamir-highway-4x4': { image: tourPhotos['pamir-highway-4x4'][0].src, hook: 'Take the high road into the heart of the Pamirs.' },
+  'mountain-lakes-trekking': { image: tourPhotos['mountain-lakes-trekking'][0].src, hook: 'Walk toward the stillness of mountain lakes.' },
+  'fan-mountain-lakes': { image: tourPhotos['fan-mountain-lakes'][0].src, hook: 'A journey shaped by the Fan Mountains and their lakes.' },
+  'snow-leopard-tour': { image: tourPhotos['snow-leopard-tour'][0].src, hook: 'Explore high-altitude landscapes with a local team.' },
+  'cross-border-trekking': { image: tourPhotos['cross-border-trekking'][0].src, hook: 'Follow mountain trails across changing terrain.' },
 };
 export const featuredTourSlugs = Object.keys(featuredTourMedia);
