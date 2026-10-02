@@ -34,6 +34,47 @@ export const home = {
       { icon: 'users', title: 'Small groups', text: 'Trips are planned around a smaller group experience. Exact group size varies by journey and will be confirmed in your quote.' },
     ],
   },
+  reviews: {
+    eyebrow: 'GUEST VOICES', title: 'Travelers say', intro: 'Sample layout only. Real reviews and ratings will appear after verification and permission.',
+    badges: ['TripAdvisor [add real badge]', 'Google [add real badge]', 'Licensed operator [add real badge]'],
+    placeholder: 'PLACEHOLDER · NOT A REAL REVIEW', previous: 'Previous review', next: 'Next review',
+  },
+  team: { eyebrow: 'THE PEOPLE', title: 'Meet your hosts', intro: 'The people behind your journey. Portraits, bios and languages await confirmation.', languages: 'Languages', instagram: 'Instagram profile' },
+  process: {
+    eyebrow: 'YOUR NEXT STEPS', title: 'How it works',
+    steps: [
+      { icon: 'message', title: 'Inquiry', text: 'Tell us your interests, dates and group size. Share the places you most want to see.' },
+      { icon: 'route', title: 'Custom itinerary', text: 'The team will discuss a route and practical details with you. Nothing is final until you agree.' },
+      { icon: 'check', title: 'Confirmation', text: 'Review the itinerary, current price and inclusions directly with the team before confirming.' },
+      { icon: 'mountain', title: 'Adventure', text: 'Meet your local hosts and set out on the agreed route.' },
+    ],
+    infoTitle: "Permits, visas and what's included",
+    bullets: ['Some Pamir routes may involve a GBAO permit; confirm the requirements for your route and nationality.', 'Check your visa requirements before travel with the relevant official authority.', 'Ask for a written list of transport, accommodation, meals and exclusions for your chosen trip.'],
+    infoLink: 'Ask us a question',
+  },
+  gallery: { items: [
+    { src: '/placeholders/hero.jpg', alt: 'Illustrative placeholder: mountain horizon' },
+    { src: '/placeholders/lakes.jpg', alt: 'Illustrative placeholder: mountain lake landscape' },
+    { src: '/placeholders/4x4.jpg', alt: 'Illustrative placeholder: high mountain road' },
+    { src: '/placeholders/fan.jpg', alt: 'Illustrative placeholder: Fan Mountains landscape' },
+    { src: '/placeholders/cross.jpg', alt: 'Illustrative placeholder: remote mountain trail' },
+    { src: '/placeholders/snow.jpg', alt: 'Illustrative placeholder: snow mountain scenery' },
+    { src: '/placeholders/destination.jpg', alt: 'Illustrative placeholder: Pamir valley landscape' },
+    { src: '/placeholders/hero.jpg', alt: 'Illustrative placeholder: broad mountain panorama' },
+  ], eyebrow: 'THE VIEW', title: 'Glimpses of the Pamirs', intro: 'Illustrative images for layout only. Approved destination photography will replace these.', full: 'View full gallery', open: 'Open image', close: 'Close gallery image', previous: 'Previous image', next: 'Next image', counter: 'Image', placeholder: 'Illustrative placeholder image' },
+  inquiry: {
+    eyebrow: 'START A CONVERSATION', title: "Tell us your dream route. We'll shape the trip.", reply: '[Reply within 24 hours — to confirm with the team.]',
+    steps: ['Trip', 'Details', 'Contact'], next: 'Continue', back: 'Back', submit: 'Send inquiry', sending: 'Sending…',
+    activity: 'Activity or tour', activityPrompt: 'Choose a tour', destination: 'Destination (optional)', destinationPrompt: 'Choose a destination', special: 'Special request (optional)', specialPrompt: 'Tell us what matters to you',
+    date: 'Preferred date or month', datePrompt: 'For example, June 2027', group: 'Group size', flexibility: 'My dates are flexible',
+    name: 'Your name', email: 'Email address', phone: 'Phone / WhatsApp', method: 'Preferred contact method', methods: ['Email', 'WhatsApp'],
+    honeypot: 'Leave this field empty',
+    successTitle: 'Thank you for planning with us.', successBody: 'This is a prototype: the inquiry was accepted by a demo endpoint but was not emailed or saved. Please contact the team directly.',
+    chat: 'Chat on WhatsApp', error: 'Something went wrong. Please try again, or contact us directly.', retry: 'Try again',
+    contactTitle: 'Prefer to talk directly?', contactIntro: 'Reach the team in Rushan by WhatsApp, email or phone.',
+    required: 'This field is required.', invalidEmail: 'Enter a valid email address.', invalidPhone: 'Enter a phone or WhatsApp number.', invalidGroup: 'Enter a group size of 1 or more.',
+    progress: 'Form progress', stepAnnouncement: 'Step',
+  }
 } as const;
 
 export const featuredTourMedia: Record<string, { image: string; hook: string }> = {
