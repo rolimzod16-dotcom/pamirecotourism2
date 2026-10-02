@@ -24,6 +24,12 @@ export function InquiryForm() {
   const stepRegion = useRef<HTMLDivElement>(null);
   const hasMounted = useRef(false);
   const { register, getValues, setValue, setError, clearErrors, handleSubmit, formState: { errors } } = useForm<Values>({ defaultValues: { activity: '', destination: '', specialRequest: '', preferredDate: '', groupSize: 2, flexible: false, name: '', email: '', phone: '', contactMethod: 'Email', website: '' }, shouldUnregister: false });
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const trip = params.get('trip'); const destination = params.get('destination');
+    if (trip && tours.some((tour) => tour.slug === trip)) setValue('activity', trip);
+    if (destination && destinations.some((place) => place.slug === destination)) setValue('destination', destination);
+  }, [setValue]);
   useEffect(() => { if (hasMounted.current) stepRegion.current?.querySelector<HTMLElement>('input:not([type="hidden"]), select, textarea')?.focus(); else hasMounted.current = true; }, [step]);
   const validateStep = (index: number) => {
     const section = index === 0 ? tripSchema : index === 1 ? detailsSchema : contactSchema;

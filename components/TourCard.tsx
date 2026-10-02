@@ -4,7 +4,7 @@ import { ArrowUpRight, CalendarDays, Mountain, Users } from 'lucide-react';
 import type { Tour } from '@/data/tours';
 import { featuredTourMedia, home } from '@/content/home';
 export function TourCard({ tour, featured = false }: { tour: Tour; featured?: boolean }) {
-  const media = featuredTourMedia[tour.slug];
+  const media = featuredTourMedia[tour.slug] ?? { image: tour.gallery[0], hook: tour.hook };
   return <article className={`group relative isolate flex min-h-[430px] snap-start flex-col justify-end overflow-hidden rounded-brand bg-navy text-white shadow-soft transition-transform duration-300 hover:-translate-y-1 ${featured ? 'lg:row-span-2 lg:min-h-[720px]' : 'lg:min-h-[345px]'}`}>
     <Image src={media.image} alt={`Illustrative placeholder landscape for ${tour.title}`} fill sizes={featured ? '(max-width: 1024px) 85vw, 50vw' : '(max-width: 1024px) 85vw, 25vw'} className="object-cover transition-transform duration-700 group-hover:scale-105" />
     <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/55 to-transparent" aria-hidden="true" />

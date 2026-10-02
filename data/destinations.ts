@@ -1,10 +1,10 @@
 export type DestinationGroup = 'Lakes' | 'Mountains and Valleys' | 'Historic Cities';
 export type Destination = {
   slug: string; name: string; group: DestinationGroup; lat: number; lng: number;
-  description: string; image: string;
+  description: string; image: string; region: string; coordinates: { lat: number; lng: number }; highlights: string[]; bestSeason: string; gallery: string[]; howToGetThere: string;
 };
 // Coordinates are approximate map points, not navigation or route data. Images are illustrative placeholders.
-export const destinations: Destination[] = [
+const base: Array<Omit<Destination, 'region' | 'coordinates' | 'highlights' | 'bestSeason' | 'gallery' | 'howToGetThere'>> = [
   { slug: 'iskandarkul', name: 'Iskandarkul', group: 'Lakes', lat: 39.08, lng: 68.37, description: 'An alpine lake in the Fan Mountains.', image: '/placeholders/destination.jpg' },
   { slug: 'sarez', name: 'Sarez', group: 'Lakes', lat: 38.20, lng: 72.75, description: 'A remote lake in the Pamir Mountains.', image: '/placeholders/destination.jpg' },
   { slug: 'seven-lakes', name: 'Seven Lakes', group: 'Lakes', lat: 39.16, lng: 67.81, description: 'A chain of lakes in the Shing Valley.', image: '/placeholders/destination.jpg' },
@@ -18,3 +18,10 @@ export const destinations: Destination[] = [
   { slug: 'hissor', name: 'Hissor', group: 'Historic Cities', lat: 38.53, lng: 68.55, description: 'A historic town west of Dushanbe.', image: '/placeholders/destination.jpg' },
   { slug: 'khujand', name: 'Khujand', group: 'Historic Cities', lat: 40.28, lng: 69.62, description: 'A city on the Syr Darya in northern Tajikistan.', image: '/placeholders/destination.jpg' },
 ];
+// Editorial detail fields remain explicit placeholders until the operator verifies each place.
+export const destinations: Destination[] = base.map((place) => ({
+  ...place, region: '[Region to confirm]', coordinates: { lat: place.lat, lng: place.lng },
+  highlights: ['[Local highlights to confirm]', '[Activities and access to confirm]', '[Cultural context to confirm]'],
+  bestSeason: '[Best season to confirm]', howToGetThere: '[Route and transport to confirm with the local team]',
+  gallery: [place.image, '/placeholders/hero.jpg', '/placeholders/lakes.jpg'],
+}));
