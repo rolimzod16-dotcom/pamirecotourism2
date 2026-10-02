@@ -3,14 +3,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { home } from '@/content/home';
 import { TrustStrip } from './TrustStrip';
 export function Hero() {
   const reduced = useReducedMotion();
+  const [allowVideo, setAllowVideo] = useState(false);
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    setAllowVideo(!connection?.saveData && connection?.effectiveType !== 'slow-2g' && connection?.effectiveType !== '2g');
+  }, []);
   const reveal = (delay: number) => ({ initial: reduced ? false : { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay } });
   return <section id="hero" aria-labelledby="hero-title" className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-navy text-white">
-    {reduced ? <Image src="/placeholders/hero.jpg" alt="" fill priority sizes="100vw" className="object-cover" /> : <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster="/placeholders/hero.jpg" aria-hidden="true"><source src="/placeholders/hero.mp4" type="video/mp4" /></video>}
-    <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/55 to-navy/25" aria-hidden="true" /><div className="absolute inset-0 bg-gradient-to-t from-navy/85 via-transparent to-navy/25" aria-hidden="true" />
+    <Image src="/placeholders/hero.jpg" alt="" fill priority sizes="100vw" className="object-cover" />
+    {!reduced && allowVideo && <video className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" poster="/placeholders/hero.jpg" aria-hidden="true"><source src="/placeholders/hero.mp4" type="video/mp4" /></video>}
+    <div className="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/75 to-navy/45" aria-hidden="true" /><div className="absolute inset-0 bg-gradient-to-t from-navy/85 via-transparent to-navy/25" aria-hidden="true" />
     <div className="relative mx-auto flex w-full max-w-content flex-1 flex-col justify-center px-5 pb-10 pt-28 sm:px-8 md:pb-14">
       <motion.p {...reveal(.1)} className="mb-5 text-xs font-semibold tracking-[.25em] text-gold sm:text-sm">{home.hero.eyebrow}</motion.p>
       <motion.h1 {...reveal(.22)} id="hero-title" className="max-w-4xl font-display text-[clamp(3.25rem,8.4vw,7.6rem)] font-medium leading-[.98] tracking-[-.045em]">{home.hero.title}</motion.h1>

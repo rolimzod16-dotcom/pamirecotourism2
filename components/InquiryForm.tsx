@@ -48,7 +48,7 @@ export function InquiryForm() {
     setStatus('sending');
     try {
       const response = await fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-        name: values.name, email: values.email,
+        name: values.name, email: values.email, website: values.website,
         message: JSON.stringify({ activity: values.activity, destination: values.destination, specialRequest: values.specialRequest, preferredDate: values.preferredDate, groupSize: values.groupSize, flexible: values.flexible, phone: values.phone, contactMethod: values.contactMethod }),
       }) });
       if (!response.ok) throw new Error('Submission failed');
