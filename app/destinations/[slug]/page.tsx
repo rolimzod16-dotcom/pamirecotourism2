@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowUpRight, Compass, Mountain, MapPin } from 'lucide-react';
+import { createMetadata, siteUrl } from '@/lib/seo';
 import { destinations } from '@/data/destinations';
 import { tours } from '@/data/tours';
 import { routesCopy as c } from '@/content/routes';
@@ -14,15 +15,15 @@ const icons = [Mountain, Compass, MapPin];
 export function generateStaticParams() { return destinations.map((place) => ({ slug: place.slug })); }
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const place = findDestination(params.slug); if (!place) return {};
-  return { title: `${place.name} | Pamir Ecotourism`, description: place.description, openGraph: { title: place.name, description: place.description, images: [place.image] } };
+  return createMetadata({ title: place.name, description: place.description, path: `/destinations/${place.slug}`, image: place.image });
 }
 export default function DestinationDetail({ params }: { params: { slug: string } }) {
   const place = findDestination(params.slug); if (!place) notFound();
   const related = tours.filter((tour) => tour.destinations.includes(place.slug)).slice(0, 3);
-  const url = `https://pamirecotourism.com/destinations/${place.slug}`;
+  const url = `${siteUrl}/destinations/${place.slug}`;
   const jsonLd = [
-    { '@context': 'https://schema.org', '@type': 'TouristDestination', name: place.name, description: place.description, url, image: `https://pamirecotourism.com${place.image}`, geo: { '@type': 'GeoCoordinates', latitude: place.coordinates.lat, longitude: place.coordinates.lng } },
-    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: c.common.home, item: 'https://pamirecotourism.com/' }, { '@type': 'ListItem', position: 2, name: c.common.destinations, item: 'https://pamirecotourism.com/destinations' }, { '@type': 'ListItem', position: 3, name: place.name, item: url }] },
+    { '@context': 'https://schema.org', '@type': 'TouristDestination', name: place.name, description: place.description, url, image: `${siteUrl}${place.image}`, geo: { '@type': 'GeoCoordinates', latitude: place.coordinates.lat, longitude: place.coordinates.lng } },
+    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: c.common.home, item: `${siteUrl}/` }, { '@type': 'ListItem', position: 2, name: c.common.destinations, item: `${siteUrl}/destinations` }, { '@type': 'ListItem', position: 3, name: place.name, item: url }] },
   ];
   return <main id="main-content"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
     <section className="relative isolate flex min-h-[510px] items-end overflow-hidden bg-navy px-5 pb-14 pt-32 text-white sm:px-8"><Image src={place.image} alt={`${c.common.imagePlaceholder}: ${place.name}`} fill priority sizes="100vw" className="-z-20 object-cover" /><div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy via-navy/65 to-navy/25" /><div className="mx-auto w-full max-w-content"><Breadcrumbs light items={[{ label: c.common.destinations, href: '/destinations' }, { label: place.name }]} /><p className="mt-10 text-xs font-bold uppercase tracking-[.2em] text-gold">{place.group}</p><h1 className="mt-4 font-display text-5xl sm:text-7xl">{place.name}</h1><p className="mt-4 max-w-xl text-lg text-white/85">{place.description}</p></div></section>

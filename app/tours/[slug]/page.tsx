@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Check, X } from 'lucide-react';
+import { createMetadata, siteUrl } from '@/lib/seo';
 import { tours } from '@/data/tours';
 import { routesCopy as c } from '@/content/routes';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -15,7 +16,7 @@ const findTour = (slug: string) => tours.find((tour) => tour.slug === slug);
 export function generateStaticParams() { return tours.map((tour) => ({ slug: tour.slug })); }
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const tour = findTour(params.slug); if (!tour) return {};
-  return { title: `${tour.title} | Pamir Ecotourism`, description: tour.hook, openGraph: { title: tour.title, description: tour.hook, images: [tour.gallery[0]] } };
+  return createMetadata({ title: tour.title, description: tour.hook, path: `/tours/${tour.slug}`, image: tour.gallery[0] });
 }
 export default function TourDetail({ params }: { params: { slug: string } }) {
   const tour = findTour(params.slug); if (!tour) notFound();
@@ -26,10 +27,10 @@ export default function TourDetail({ params }: { params: { slug: string } }) {
     [c.tour.facts.group, tour.groupSize ?? c.common.placeholder], [c.tour.facts.price, typeof tour.price === 'number' ? `$${tour.price}` : c.tour.priceRequest],
   ];
   const related = tours.filter((item) => item.slug !== tour.slug && item.category === tour.category).slice(0, 3);
-  const url = `https://pamirecotourism.com/tours/${tour.slug}`;
+  const url = `${siteUrl}/tours/${tour.slug}`;
   const jsonLd = [
-    { '@context': 'https://schema.org', '@type': 'TouristTrip', name: tour.title, description: tour.hook, url, image: `https://pamirecotourism.com${tour.gallery[0]}`, provider: { '@type': 'TravelAgency', name: 'Pamir Ecotourism' } },
-    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: c.common.home, item: 'https://pamirecotourism.com/' }, { '@type': 'ListItem', position: 2, name: c.common.tours, item: 'https://pamirecotourism.com/tours' }, { '@type': 'ListItem', position: 3, name: tour.title, item: url }] },
+    { '@context': 'https://schema.org', '@type': 'TouristTrip', name: tour.title, description: tour.hook, url, image: `${siteUrl}${tour.gallery[0]}`, provider: { '@type': 'TravelAgency', name: 'Pamir Ecotourism' } },
+    { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: c.common.home, item: `${siteUrl}/` }, { '@type': 'ListItem', position: 2, name: c.common.tours, item: `${siteUrl}/tours` }, { '@type': 'ListItem', position: 3, name: tour.title, item: url }] },
   ];
   return <main id="main-content" className="pb-20 lg:pb-0"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
     <section className="relative isolate flex min-h-[520px] items-end overflow-hidden bg-navy px-5 pb-12 pt-32 text-white sm:px-8 sm:pb-16"><Image src={tour.gallery[0]} alt={`${c.common.imagePlaceholder}: ${tour.title}`} fill priority sizes="100vw" className="-z-20 object-cover" /><div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy via-navy/60 to-navy/30" /><div className="mx-auto w-full max-w-content"><Breadcrumbs light items={[{ label: c.common.tours, href: '/tours' }, { label: tour.title }]} /><span className="mt-10 inline-block rounded-full border border-white/60 px-3 py-1 text-xs font-bold uppercase tracking-wider">{tour.category}</span><h1 className="mt-4 max-w-4xl font-display text-4xl leading-tight sm:text-6xl">{tour.title}</h1><p className="mt-4 max-w-xl text-lg text-white/85">{tour.hook}</p></div></section>
