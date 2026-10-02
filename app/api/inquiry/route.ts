@@ -5,7 +5,7 @@ import { destinations } from '@/data/destinations';
 import { allowRequest, readJson, safeText } from '@/lib/request-guard';
 
 const detailsSchema = z.object({
-  activity: z.string().refine((slug) => tours.some((tour) => tour.slug === slug)),
+  activity: z.string().refine((slug) => slug === 'custom' || tours.some((tour) => tour.slug === slug)),
   destination: z.string().refine((slug) => !slug || destinations.some((place) => place.slug === slug)),
   specialRequest: safeText(3000),
   preferredDate: safeText(120, 1),

@@ -2,48 +2,51 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ChevronDown, Menu, Phone, User, X, Compass } from 'lucide-react';
 import { chrome } from '@/content/chrome';
-import { tours } from '@/data/tours';
-import { destinations } from '@/data/destinations';
-import { ChevronDown, Menu, X, ArrowUpRight } from 'lucide-react';
 
 const c = chrome.header;
-const menus = [
-  { label: c.tours, href: '/tours', links: [{ label: c.allTours, href: '/tours' }, { label: c.trekking, href: '/tours?category=trekking' }, { label: c.driving, href: '/tours?category=driving' }, { label: tours[0].title, href: `/tours/${tours[0].slug}` }, { label: tours[3].title, href: `/tours/${tours[3].slug}` }] },
-  { label: c.destinations, href: '/destinations', links: [{ label: c.allDestinations, href: '/destinations' }, { label: c.lakes, href: '/destinations?group=lakes' }, { label: c.mountains, href: '/destinations?group=mountains' }, { label: c.cities, href: '/destinations?group=cities' }, { label: destinations[0].name, href: `/destinations/${destinations[0].slug}` }, { label: destinations[3].name, href: `/destinations/${destinations[3].slug}` }] },
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Tours & Activities', href: '/tours' },
+  { label: 'Destinations', href: '/destinations' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact', href: '/contact' },
 ];
+
+function Mark() {
+  return <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0f5132" /><path d="M7 35 L17 16 L24 27 L31 12 L41 35 Z" fill="#F8F6F0" /><circle cx="35" cy="13" r="2.6" fill="#CA8A04" /></svg>;
+}
+
 export function Header() {
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  useEffect(() => {
-    const update = () => setScrolled(window.scrollY > 24);
-    update(); window.addEventListener('scroll', update, { passive: true });
-    return () => window.removeEventListener('scroll', update);
-  }, []);
-  return <><a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-brand focus:bg-white focus:p-3">{c.skip}</a>
-    <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${pathname !== '/' || scrolled || mobileOpen ? 'bg-navy text-white shadow-soft' : 'bg-transparent text-white'}`}>
-      <div className="mx-auto flex h-20 max-w-content items-center justify-between gap-6 px-5 sm:px-8">
-        <Link href="/" aria-label={c.home} className="relative z-10 flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-full border border-current/40 font-display text-xl">P</span>
-          <span className="font-display text-lg font-semibold leading-none sm:text-xl">Pamir<br /><span className="text-sm font-normal tracking-[.16em]">ECOTOURISM</span></span>
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  const active = (href: string) => href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+  return <><a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-white focus:px-3 focus:py-2 focus:text-pine">{c.skip}</a>
+    <header className="fixed inset-x-0 top-0 z-50 bg-paper/90 shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-12">
+        <Link href="/" aria-label={c.home} className="flex shrink-0 items-center gap-3" onClick={() => setMobileOpen(false)}>
+          <Mark />
+          <span className="flex flex-col"><span className="font-display text-base font-semibold leading-none tracking-tight text-pine sm:text-lg xl:text-xl">Pamir Ecotourism</span><span className="mt-0.5 hidden font-display text-[11px] font-bold uppercase tracking-wider text-slate 2xl:block">Tajikistan Expeditions</span></span>
         </Link>
-        <nav aria-label={c.mainNav} className="hidden items-center gap-7 lg:flex">
-          {menus.map((menu) => <div key={menu.label} className="group relative">
-            <Link href={menu.href} className="flex items-center gap-1 py-7 text-sm font-medium hover:text-gold focus-visible:text-gold">{menu.label}<ChevronDown size={15} aria-hidden="true" /></Link>
-            <div className="invisible absolute left-0 top-full min-w-56 translate-y-2 rounded-brand border border-navy/10 bg-white p-2 text-navy opacity-0 shadow-soft transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-              {menu.links.map((item) => <Link key={item.href} href={item.href} className="block rounded-lg px-4 py-3 text-sm hover:bg-snow focus:bg-snow">{item.label}</Link>)}
-            </div>
-          </div>)}
-          <Link href="/gallery" className="inline-flex min-h-11 items-center text-sm font-medium hover:text-gold">{c.gallery}</Link><Link href="/about" className="inline-flex min-h-11 items-center text-sm font-medium hover:text-gold">{c.about}</Link><Link href="/contact" className="inline-flex min-h-11 items-center text-sm font-medium hover:text-gold">{c.contact}</Link>
+        <nav aria-label={c.mainNav} className="hidden items-center gap-5 xl:flex">
+          {links.map((item) => <Link key={item.href} href={item.href} aria-current={active(item.href) ? 'page' : undefined} className={`whitespace-nowrap py-1 font-display text-sm font-semibold transition-colors ${active(item.href) ? 'relative text-pine after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-pine' : 'text-ink/70 hover:text-ink'}`}>{item.label}</Link>)}
         </nav>
-        <Link href="/#inquiry" className="hidden items-center gap-2 rounded-brand bg-gold px-5 py-3 text-sm font-semibold text-navy transition hover:bg-white lg:flex">{c.plan} <ArrowUpRight size={16} aria-hidden="true" /></Link>
-        <button type="button" aria-label={mobileOpen ? c.closeMenu : c.openMenu} aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => setMobileOpen(!mobileOpen)} className="rounded-lg p-2 lg:hidden">{mobileOpen ? <X /> : <Menu />}</button>
+        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          <a className="hidden items-center gap-1.5 whitespace-nowrap font-display text-[13px] font-semibold text-ink/70 transition-colors hover:text-pine 2xl:flex" href="tel:+992936001936"><Phone size={16} className="text-pine" aria-hidden="true" />+992 93 600 1936</a>
+          <span className="hidden items-center rounded-lg bg-mist px-2 py-1 font-display text-[11px] font-bold text-ink sm:flex"><span className="mr-1 text-slate">USD</span><ChevronDown size={14} aria-hidden="true" /></span>
+          <Link href="/#booking-form" className="inline-flex items-center gap-2 rounded-xl bg-forest px-2.5 py-2.5 font-display text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-leaf sm:px-5"><Compass size={18} aria-hidden="true" /><span className="hidden sm:inline">Book Expedition</span></Link>
+          <Link href="/contact" aria-label="Contact the team" className="hidden h-8 w-8 items-center justify-center rounded-full bg-pine text-white sm:flex"><User size={16} aria-hidden="true" /></Link>
+          <button type="button" aria-label={mobileOpen ? c.closeMenu : c.openMenu} aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => setMobileOpen(!mobileOpen)} className="rounded-lg p-2 text-pine xl:hidden">{mobileOpen ? <X /> : <Menu />}</button>
+        </div>
       </div>
-      {mobileOpen && <nav id="mobile-navigation" aria-label={c.mobileNav} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-white/15 bg-navy px-5 pb-8 pt-3 text-white lg:hidden">
-        {menus.map((menu) => <details key={menu.label} className="border-b border-white/15 py-3"><summary className="flex min-h-11 cursor-pointer items-center py-2 font-display text-xl">{menu.label}</summary><div className="flex flex-col gap-1 pl-4">{menu.links.map((item) => <Link onClick={() => setMobileOpen(false)} key={item.href} href={item.href} className="flex min-h-11 items-center py-2 text-sm text-white/85">{item.label}</Link>)}</div></details>)}
-        {[[c.gallery,'/gallery'],[c.about,'/about'],[c.contact,'/contact']].map(([label, href]) => <Link key={href} onClick={() => setMobileOpen(false)} href={href} className="block border-b border-white/15 py-5 font-display text-xl">{label}</Link>)}
-        <Link onClick={() => setMobileOpen(false)} href="/#inquiry" className="mt-6 block rounded-brand bg-gold px-5 py-4 text-center font-semibold text-navy">{c.plan}</Link>
+      {mobileOpen && <nav id="mobile-navigation" aria-label={c.mobileNav} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-pine/10 bg-paper px-6 pb-8 pt-3 xl:hidden">
+        <details className="border-b border-pine/10 py-3"><summary className="flex min-h-11 cursor-pointer items-center font-display text-xl text-ink">Tours & Activities</summary><div className="flex flex-col gap-1 pb-2 pl-4"><Link onClick={() => setMobileOpen(false)} href="/tours" className="flex min-h-11 items-center text-sm text-ink/80">{c.allTours}</Link><Link onClick={() => setMobileOpen(false)} href="/tours?category=trekking" className="flex min-h-11 items-center text-sm text-ink/80">{c.trekking}</Link><Link onClick={() => setMobileOpen(false)} href="/tours?category=driving" className="flex min-h-11 items-center text-sm text-ink/80">{c.driving}</Link></div></details>
+        {links.filter((item) => item.href !== '/tours' && item.href !== '/').map((item) => <Link key={item.href} onClick={() => setMobileOpen(false)} href={item.href} className="block border-b border-pine/10 py-4 font-display text-xl text-ink">{item.label}</Link>)}
+        <Link onClick={() => setMobileOpen(false)} href="/" className="block border-b border-pine/10 py-4 font-display text-xl text-ink">Home</Link>
+        <Link onClick={() => setMobileOpen(false)} href="/#booking-form" className="mt-6 block rounded-xl bg-forest px-5 py-4 text-center font-display font-semibold text-white">Book Expedition</Link>
       </nav>}
     </header>
   </>;
