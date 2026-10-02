@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { chrome } from '@/content/chrome';
 import { site } from '@/data/site';
 const configured = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://pamirecotourism.com';
 export const siteUrl = configured.replace(/\/$/, '');
 export const seo = {
   name: site.name, url: siteUrl, defaultOgImage: '/opengraph-image',
-  description: 'Locally rooted journeys in Tajikistan with Pamir Ecotourism.',
+  description: chrome.description,
   // [confirm] Add verified official social profile URLs before launch.
   sameAs: [] as string[],
 };

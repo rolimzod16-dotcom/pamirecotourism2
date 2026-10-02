@@ -47,7 +47,6 @@ export const pages = {
     title: 'Stay in touch', intro: 'Occasional journey updates. Demo sign-up only until mailing is connected.', label: 'Email address for newsletter', placeholder: 'Your email address', submit: 'Join the list', sending: 'Checking…',
     success: 'Email validated. This prototype has not subscribed you yet.', error: 'We could not check that address. Please try again.', invalid: 'Enter a valid email address.',
   },
-  footer: { socialPending: 'Official social profile links pending confirmation.' },
   system: {
     notFoundTitle: 'This path is off the map.', notFoundText: 'The page you requested could not be found.', home: 'Back to home', tours: 'Explore tours',
     errorTitle: 'The page could not load.', errorText: 'Please try again. If the problem continues, return home.', retry: 'Try again',
