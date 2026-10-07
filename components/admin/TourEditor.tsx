@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { saveTourAction } from '@/app/admin/actions';
 import type { StoredTour } from '@/lib/tour-record';
 
-const field = 'mt-1 w-full rounded-xl border border-pine/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-pine';
+const field = 'mt-1 w-full min-w-0 rounded-xl border border-pine/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-pine';
 const label = 'block text-sm font-semibold';
 const regions = [
   ['pamir-highway', 'Pamir Highway'],
@@ -75,7 +75,7 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
 
   return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
-    <section className="grid gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
+    <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <label className={label}>Название<input className={field} value={tour.title} onChange={(event) => set('title', event.target.value)} required /></label>
       <label className={label}>Категория<select className={field} value={tour.category} onChange={(event) => set('category', event.target.value as StoredTour['category'])}><option value="driving">4x4 / дорога</option><option value="trekking">Треккинг</option></select></label>
       <label className={label}>Цена, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
@@ -90,7 +90,7 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
       <label className={label}>Дистанция<input className={field} value={tour.distance} onChange={(event) => set('distance', event.target.value)} /></label>
       <label className={label}>Высота<input className={field} value={tour.maxAltitude} onChange={(event) => set('maxAltitude', event.target.value)} /></label>
     </section>
-    <section className="grid gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
+    <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <fieldset><legend className={label}>Где показывать в фильтре</legend><div className="mt-2 flex flex-wrap gap-3">{regions.map(([value, name]) => <label key={value} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={tour.regions.includes(value)} onChange={() => toggle('regions', value)} />{name}</label>)}</div></fieldset>
       <fieldset><legend className={label}>Тип</legend><div className="mt-2 flex flex-wrap gap-3">{activities.map(([value, name]) => <label key={value} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={tour.activities.includes(value)} onChange={() => toggle('activities', value)} />{name}</label>)}</div></fieldset>
       <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" checked={tour.showOnHome} onChange={(event) => set('showOnHome', event.target.checked)} />Показывать на главной</label>
@@ -106,9 +106,9 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
     </section>
     <section className="rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between"><h2 className="font-display text-xl">Программа по дням</h2><button type="button" className="text-sm font-semibold text-pine" onClick={() => set('itinerary', [...tour.itinerary, { day: tour.itinerary.length + 1, title: '', description: '', overnight: '' }])}>Добавить день</button></div>
-      <div className="mt-4 grid gap-4">{tour.itinerary.map((day, index) => <div key={index} className="grid gap-2 rounded-xl bg-sand p-3"><div className="flex gap-2"><input className="w-20 rounded-xl border border-pine/15 px-3 py-2 text-sm" inputMode="numeric" value={day.day} aria-label="Номер дня" onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, day: Number(event.target.value) || item.day } : item))} /><input className="min-w-0 flex-1 rounded-xl border border-pine/15 px-3 py-2 text-sm" placeholder="Заголовок дня" value={day.title} onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, title: event.target.value } : item))} /><button type="button" className="text-sm font-semibold text-red-800" onClick={() => set('itinerary', tour.itinerary.filter((_, itemIndex) => itemIndex !== index))}>Убрать</button></div><textarea className={field} rows={3} placeholder="Что происходит в этот день" value={day.description} onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, description: event.target.value } : item))} /><input className={field} placeholder="Ночёвка" value={day.overnight} onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, overnight: event.target.value } : item))} /></div>)}</div>
+      <div className="mt-4 grid gap-4">{tour.itinerary.map((day, index) => <div key={index} className="grid gap-2 rounded-xl bg-sand p-3"><div className="flex flex-wrap gap-2"><input className="w-20 rounded-xl border border-pine/15 px-3 py-2 text-sm" inputMode="numeric" value={day.day} aria-label="Номер дня" onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, day: Number(event.target.value) || item.day } : item))} /><input className="min-w-0 flex-1 rounded-xl border border-pine/15 px-3 py-2 text-sm" placeholder="Заголовок дня" value={day.title} onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, title: event.target.value } : item))} /><button type="button" className="text-sm font-semibold text-red-800" onClick={() => set('itinerary', tour.itinerary.filter((_, itemIndex) => itemIndex !== index))}>Убрать</button></div><textarea className={field} rows={3} placeholder="Что происходит в этот день" value={day.description} onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, description: event.target.value } : item))} /><input className={field} placeholder="Ночёвка" value={day.overnight} onChange={(event) => set('itinerary', tour.itinerary.map((item, itemIndex) => itemIndex === index ? { ...item, overnight: event.target.value } : item))} /></div>)}</div>
     </section>
-    <section className="grid gap-4 rounded-2xl bg-white p-5 shadow-sm lg:grid-cols-3">
+    <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm lg:grid-cols-3">
       <label className={label}>Включено, каждая строка отдельно<textarea className={field} rows={6} value={included} onChange={(event) => setIncluded(event.target.value)} /></label>
       <label className={label}>Не включено<textarea className={field} rows={6} value={excluded} onChange={(event) => setExcluded(event.target.value)} /></label>
       <label className={label}>Снаряжение<textarea className={field} rows={6} value={gear} onChange={(event) => setGear(event.target.value)} /></label>

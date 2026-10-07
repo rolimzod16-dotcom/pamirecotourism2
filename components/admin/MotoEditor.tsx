@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { saveMotoAction } from '@/app/admin/moto-actions';
 import type { StoredMoto } from '@/lib/moto-record';
 
-const field = 'mt-1 w-full rounded-xl border border-pine/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-pine';
+const field = 'mt-1 w-full min-w-0 rounded-xl border border-pine/15 bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-pine';
 const label = 'block text-sm font-semibold';
 
 export function MotoEditor({ initial, creating }: { initial: StoredMoto; creating: boolean }) {
@@ -53,7 +53,7 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
 
   return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
-    <section className="grid gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
+    <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <label className={label}>Название<input className={field} value={motorcycle.title} onChange={(event) => set('title', event.target.value)} required /></label>
       <label className={label}>Цена за день, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
       <label className="flex items-center gap-2 text-sm font-semibold sm:mt-7"><input type="checkbox" checked={motorcycle.published} onChange={(event) => set('published', event.target.checked)} />Показывать на сайте</label>
