@@ -1,6 +1,6 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { tours, type TourCategory } from '@/data/tours';
+import { tours as fallbackTours, type Tour, type TourCategory } from '@/data/tours';
 import { routesCopy as copy } from '@/content/routes';
 import { TourCard } from './TourCard';
 import { Reveal } from './Reveal';
@@ -8,7 +8,7 @@ type Category = 'all' | TourCategory;
 const filters: { value: Category; label: string }[] = [
   { value: 'all', label: copy.tours.all }, { value: 'trekking', label: copy.tours.trekking }, { value: 'driving', label: copy.tours.driving },
 ];
-export function TourFilters() {
+export function TourFilters({ tours = fallbackTours }: { tours?: Tour[] }) {
   const router = useRouter(), pathname = usePathname(), params = useSearchParams();
   const category = (params.get('category') ?? 'all') as Category;
   const sort = params.get('sort') ?? 'default';

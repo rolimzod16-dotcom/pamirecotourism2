@@ -6,7 +6,8 @@ import { ArrowUpRight, Compass, Mountain, MapPin } from 'lucide-react';
 import { createMetadata, siteUrl } from '@/lib/seo';
 import { destinations } from '@/data/destinations';
 import { placePhotos } from '@/data/photos';
-import { tours } from '@/data/tours';
+import { toPublicTour } from '@/lib/tour-record';
+import { listPublished } from '@/lib/tour-store';
 import { routesCopy as c } from '@/content/routes';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { Reveal } from '@/components/Reveal';
@@ -18,10 +19,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const place = findDestination(params.slug); if (!place) return {};
   return createMetadata({ title: place.name, description: place.description, path: `/destinations/${place.slug}`, image: place.image });
 }
-export default function DestinationDetail({ params }: { params: { slug: string } }) {
+export const dynamic = 'force-dynamic';
+export default async function DestinationDetail({ params }: { params: { slug: string } }) {
   const place = findDestination(params.slug); if (!place) notFound();
   const photos = placePhotos[place.slug] ?? [];
-  const related = tours.filter((tour) => tour.destinations.includes(place.slug)).slice(0, 3);
+  const related = (await listPublished()).filter((tour) => tour.destinations.includes(place.slug)).slice(0, 3).map(toPublicTour);
   const url = `${siteUrl}/destinations/${place.slug}`;
   const jsonLd = [
     { '@context': 'https://schema.org', '@type': 'TouristDestination', name: place.name, description: place.description, url, image: `${siteUrl}${place.image}`, geo: { '@type': 'GeoCoordinates', latitude: place.coordinates.lat, longitude: place.coordinates.lng } },

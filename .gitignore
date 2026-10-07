@@ -3,6 +3,7 @@ node_modules
 out
 .env*
 !.env.example
+.data
 *.tsbuildinfo
 .DS_Store
 .codex

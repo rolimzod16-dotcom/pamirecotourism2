@@ -2,9 +2,9 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { CheckCircle2, MessageCircle, Mountain, Send } from 'lucide-react';
 import { catalogTours } from '@/content/expedition-home';
+type TourChoice = { slug: string; title: string };
 import { destinations } from '@/data/destinations';
 import { site } from '@/data/site';
-import { tours } from '@/data/tours';
 import { useExpedition } from './ExpeditionProvider';
 
 const groups = [
@@ -14,16 +14,17 @@ const groups = [
   { value: '5', label: '5+ Group (Multiple Vehicles)', size: 5 },
 ];
 
-export function BookingSection() {
+export function BookingSection({ tours = catalogTours }: { tours?: TourChoice[] }) {
   const { tour, setTour } = useExpedition();
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [stored, setStored] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const trip = params.get('trip');
     if (trip && (trip === 'custom' || tours.some((item) => item.slug === trip))) setTour(trip);
-  }, [setTour]);
+  }, [setTour, tours]);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,6 +49,8 @@ export function BookingSection() {
         message: JSON.stringify({ activity: tour, destination: place ? place.slug : '', specialRequest, preferredDate: dates || 'Dates to confirm', groupSize: group.size, flexible: true, phone, contactMethod: 'WhatsApp' }),
       }) });
       if (!response.ok) throw new Error('Inquiry failed');
+      const payload = await response.json() as { stored?: boolean };
+      setStored(Boolean(payload.stored));
       setStatus('success');
     } catch { setStatus('error'); setError('We could not send that inquiry. Please try again or message us on WhatsApp.'); }
   };
@@ -70,7 +73,7 @@ export function BookingSection() {
         <div className="rounded-2xl bg-mist p-6"><p className="inline-flex items-center gap-2 font-display text-base font-bold text-pine"><Mountain size={18} aria-hidden="true" />Mountain Field Headquarters</p><p className="mt-2 text-sm leading-6 text-ink/70">{site.address}</p></div>
       </div>
       <div className="rounded-2xl bg-paper p-8 shadow-xl sm:p-10 lg:col-span-7">
-        {status === 'success' ? <div role="status"><h3 className="font-display text-2xl font-bold text-ink">Tashakkur. Your inquiry is in.</h3><p className="mt-3 text-sm leading-6 text-slate">The Rushan team will review the route. This form is received by the site, so please also message WhatsApp if your dates are soon.</p><a href="https://wa.me/992936001936" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-forest px-5 py-3 font-display font-semibold text-white">Message WhatsApp</a></div> : <form className="flex flex-col gap-6" onSubmit={submit} noValidate>
+        {status === 'success' ? <div role="status"><h3 className="font-display text-2xl font-bold text-ink">Tashakkur. Your inquiry is in.</h3><p className="mt-3 text-sm leading-6 text-slate">{stored ? 'The Rushan team can see this inquiry in the office panel. Message WhatsApp if your dates are soon.' : 'We could not store that inquiry. Please message the team on WhatsApp.'}</p><a href="https://wa.me/992936001936" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-forest px-5 py-3 font-display font-semibold text-white">Message WhatsApp</a></div> : <form className="flex flex-col gap-6" onSubmit={submit} noValidate>
           <div><h3 className="font-display text-2xl font-bold text-ink">Expedition Inquiry Form</h3><p className="mt-1 text-xs text-slate">Tell us the dates you have in mind. The team will reply with a route and a written price.</p></div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5 font-display text-[13px] font-semibold" htmlFor="lead_name">Your Full Name *<input id="lead_name" name="name" required autoComplete="name" placeholder="e.g. Sarah Jenkins" className="rounded-xl bg-mist px-4 py-3 text-sm font-normal text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-pine/20" /></label>
@@ -78,7 +81,7 @@ export function BookingSection() {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5 font-display text-[13px] font-semibold" htmlFor="lead_whatsapp">WhatsApp Number *<input id="lead_whatsapp" name="phone" type="tel" required autoComplete="tel" placeholder="+44 7911 123456" className="rounded-xl bg-mist px-4 py-3 text-sm font-normal text-ink placeholder:text-slate focus:outline-none focus:ring-2 focus:ring-pine/20" /></label>
-            <label className="flex flex-col gap-1.5 font-display text-[13px] font-semibold" htmlFor="lead_tour">Desired Expedition *<select id="lead_tour" value={tour} onChange={(event) => setTour(event.target.value)} className="cursor-pointer rounded-xl bg-mist px-4 py-3 text-sm font-normal text-ink focus:outline-none focus:ring-2 focus:ring-pine/20">{catalogTours.map((item) => <option key={item.slug} value={item.slug}>{item.title}</option>)}<option value="custom">Custom Private Route</option></select></label>
+            <label className="flex flex-col gap-1.5 font-display text-[13px] font-semibold" htmlFor="lead_tour">Desired Expedition *<select id="lead_tour" value={tour} onChange={(event) => setTour(event.target.value)} className="cursor-pointer rounded-xl bg-mist px-4 py-3 text-sm font-normal text-ink focus:outline-none focus:ring-2 focus:ring-pine/20">{tours.map((item) => <option key={item.slug} value={item.slug}>{item.title}</option>)}<option value="custom">Custom Private Route</option></select></label>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5 font-display text-[13px] font-semibold" htmlFor="group_size">Estimated Travelers *<select id="group_size" name="group" defaultValue="2" className="cursor-pointer rounded-xl bg-mist px-4 py-3 text-sm font-normal text-ink focus:outline-none focus:ring-2 focus:ring-pine/20">{groups.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>

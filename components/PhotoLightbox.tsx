@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import { SiteImage as Image } from '@/components/SiteImage';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 export type LightboxPhoto = { src: string; alt: string; caption?: string };
 export type LightboxLabels = { close: string; previous: string; next: string; image: string };

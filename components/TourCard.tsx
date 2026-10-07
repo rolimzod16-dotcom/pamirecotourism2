@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { SiteImage as Image } from '@/components/SiteImage';
 import Link from 'next/link';
 import { ArrowUpRight, CalendarDays, Mountain, Users } from 'lucide-react';
 import type { Tour } from '@/data/tours';

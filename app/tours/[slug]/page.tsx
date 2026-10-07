@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Check, X } from 'lucide-react';
+import { SiteImage as Image } from '@/components/SiteImage';
 import { createMetadata, siteUrl } from '@/lib/seo';
-import { tours } from '@/data/tours';
-import { tourPhotos } from '@/data/photos';
+import { toPublicTour } from '@/lib/tour-record';
+import { listPublished } from '@/lib/tour-store';
 import { routesCopy as c } from '@/content/routes';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { Accordion } from '@/components/Accordion';
@@ -14,25 +14,27 @@ import { TourBooking } from '@/components/TourBooking';
 import { TourCard } from '@/components/TourCard';
 import { Reveal } from '@/components/Reveal';
 import { PhotoGrid } from '@/components/PhotoGrid';
-const findTour = (slug: string) => tours.find((tour) => tour.slug === slug);
-export function generateStaticParams() { return tours.map((tour) => ({ slug: tour.slug })); }
+export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const tour = findTour(params.slug); if (!tour) return {};
+  const stored = (await listPublished()).find((item) => item.slug === params.slug); if (!stored) return {};
+  const tour = toPublicTour(stored);
   return createMetadata({ title: tour.title, description: tour.hook, path: `/tours/${tour.slug}`, image: tour.gallery[0] });
 }
-export default function TourDetail({ params }: { params: { slug: string } }) {
-  const tour = findTour(params.slug); if (!tour) notFound();
-  const photos = tourPhotos[tour.slug] ?? [];
+export default async function TourDetail({ params }: { params: { slug: string } }) {
+  const published = await listPublished();
+  const stored = published.find((item) => item.slug === params.slug); if (!stored) notFound();
+  const tour = toPublicTour(stored);
+  const photos = stored.gallery;
   const facts = [
     [c.tour.facts.days, tour.days === null ? c.common.placeholder : String(tour.days)],
     [c.tour.facts.distance, tour.distance ?? c.common.placeholder], [c.tour.facts.altitude, tour.maxAltitude ?? c.common.placeholder],
     [c.tour.facts.difficulty, tour.difficulty ?? c.common.placeholder], [c.tour.facts.season, tour.season ?? c.common.placeholder],
     [c.tour.facts.group, tour.groupSize ?? c.common.placeholder], [c.tour.facts.price, typeof tour.price === 'number' ? `$${tour.price}` : c.tour.priceRequest],
   ];
-  const related = tours.filter((item) => item.slug !== tour.slug && item.category === tour.category).slice(0, 3);
+  const related = published.filter((item) => item.slug !== tour.slug && item.category === tour.category).slice(0, 3).map(toPublicTour);
   const url = `${siteUrl}/tours/${tour.slug}`;
   const jsonLd = [
-    { '@context': 'https://schema.org', '@type': 'TouristTrip', name: tour.title, description: tour.hook, url, image: `${siteUrl}${tour.gallery[0]}`, provider: { '@type': 'TravelAgency', name: 'Pamir Ecotourism' } },
+    { '@context': 'https://schema.org', '@type': 'TouristTrip', name: tour.title, description: tour.hook, url, image: tour.gallery[0]?.startsWith('http') ? tour.gallery[0] : `${siteUrl}${tour.gallery[0] ?? ''}`, provider: { '@type': 'TravelAgency', name: 'Pamir Ecotourism' } },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: c.common.home, item: `${siteUrl}/` }, { '@type': 'ListItem', position: 2, name: c.common.tours, item: `${siteUrl}/tours` }, { '@type': 'ListItem', position: 3, name: tour.title, item: url }] },
   ];
   return <main id="main-content" className="pb-20 lg:pb-0"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />

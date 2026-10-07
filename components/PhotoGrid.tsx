@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
+import { SiteImage as Image } from '@/components/SiteImage';
 import { PhotoLightbox } from './PhotoLightbox';
 import { home } from '@/content/home';
 

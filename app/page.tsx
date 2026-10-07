@@ -7,21 +7,28 @@ import { TeamSection } from '@/components/home/TeamSection';
 import { ReviewSection } from '@/components/home/ReviewSection';
 import { BookingSection } from '@/components/home/BookingSection';
 import { createMetadata } from '@/lib/seo';
+import { toHomeCard } from '@/lib/tour-record';
+import { listPublished } from '@/lib/tour-store';
 
 export const metadata: Metadata = createMetadata({
   title: 'Home',
   description: 'Local Pamir expeditions from Rushan, GBAO: 4x4 overland, alpine treks, lakes, and community homestays in Tajikistan.',
 });
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function Home() {
+  const tours = await listPublished();
+  const homeTours = tours.filter((tour) => tour.showOnHome).map(toHomeCard);
+  const choices = tours.map((tour) => ({ slug: tour.slug, title: tour.title }));
   return <main id="main-content" className="bg-paper pt-20">
     <ExpeditionProvider>
-      <Finder />
+      <Finder tours={homeTours} />
       <DestinationShowcase />
       <WhyChoose />
       <TeamSection />
       <ReviewSection />
-      <BookingSection />
+      <BookingSection tours={choices} />
     </ExpeditionProvider>
   </main>;
 }

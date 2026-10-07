@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { tours } from '@/data/tours';
+import { randomUUID } from 'crypto';
 import { destinations } from '@/data/destinations';
 import { allowRequest, readJson, safeText } from '@/lib/request-guard';
+import { listPublished, saveInquiry } from '@/lib/tour-store';
 
-const detailsSchema = z.object({
-  activity: z.string().refine((slug) => slug === 'custom' || tours.some((tour) => tour.slug === slug)),
+const detailsSchema = (slugs: string[]) => z.object({
+  activity: z.string().refine((slug) => slug === 'custom' || slugs.includes(slug)),
   destination: z.string().refine((slug) => !slug || destinations.some((place) => place.slug === slug)),
   specialRequest: safeText(3000),
   preferredDate: safeText(120, 1),
@@ -26,11 +27,22 @@ export async function POST(request: Request) {
   try {
     const payload = inquirySchema.safeParse(await readJson(request));
     if (!payload.success) return NextResponse.json({ error: 'Invalid inquiry' }, { status: 400 });
-    if (payload.data.website) return NextResponse.json({ ok: true, demo: true });
-    const details = detailsSchema.safeParse(JSON.parse(payload.data.message));
+    if (payload.data.website) return NextResponse.json({ ok: true, stored: false });
+    const slugs = (await listPublished()).map((tour) => tour.slug);
+    const details = detailsSchema(slugs).safeParse(JSON.parse(payload.data.message));
     if (!details.success) return NextResponse.json({ error: 'Invalid trip details' }, { status: 400 });
-    // Development stub: no persistence or email delivery. Avoid logging private inquiry details.
-    console.info('Inquiry stub received', { at: new Date().toISOString() });
-    return NextResponse.json({ ok: true, demo: true });
+    const stored = await saveInquiry({
+      id: randomUUID(),
+      at: new Date().toISOString(),
+      kind: 'trip',
+      name: payload.data.name,
+      email: payload.data.email,
+      phone: details.data.phone,
+      tour: details.data.activity,
+      date: details.data.preferredDate,
+      groupSize: details.data.groupSize,
+      message: details.data.specialRequest,
+    }).catch(() => false);
+    return NextResponse.json({ ok: true, stored });
   } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
 }

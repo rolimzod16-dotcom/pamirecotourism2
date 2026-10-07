@@ -1,9 +1,10 @@
 'use client';
 import { FormEvent, useMemo, useState } from 'react';
-import Image from 'next/image';
+import { SiteImage as Image } from '@/components/SiteImage';
 import Link from 'next/link';
 import { Award, CalendarDays, Car, Compass, Footprints, House, MapPin, Mountain, Search, ShieldCheck, Star, Users, type LucideIcon } from 'lucide-react';
 import { catalogTours, tourPrice, type CatalogTour } from '@/content/expedition-home';
+type HomeTour = CatalogTour & { priceAmount?: string; priceCaption?: string };
 import { heroSlides } from '@/data/photos';
 import { useExpedition, type ExpeditionFilters } from './ExpeditionProvider';
 
@@ -30,13 +31,13 @@ function visible(tour: CatalogTour, filters: ExpeditionFilters) {
   return true;
 }
 
-export function Finder() {
+export function Finder({ tours = catalogTours }: { tours?: HomeTour[] }) {
   const { filters, setFilters, chooseTour } = useExpedition();
   const [region, setRegion] = useState(filters.region);
   const [activity, setActivity] = useState(filters.activity);
   const [season, setSeason] = useState(filters.season);
   const hero = heroSlides[0];
-  const shown = useMemo(() => catalogTours.filter((tour) => visible(tour, filters)), [filters]);
+  const shown = useMemo(() => tours.filter((tour) => visible(tour, filters)), [filters, tours]);
 
   const search = (event: FormEvent) => {
     event.preventDefault();
@@ -97,7 +98,7 @@ export function Finder() {
         </div>
         {shown.length === 0 ? <p className="rounded-2xl bg-white p-8 text-ink/70">No featured expedition matches that combination. <button type="button" className="font-semibold text-pine underline" onClick={() => { setRegion('all'); setActivity('all'); setSeason('may-oct'); setFilters({ region: 'all', activity: 'all', season: 'may-oct', tab: 'all' }); }}>Show all tours</button> or <Link href="/tours" className="font-semibold text-pine underline">browse the full list</Link>.</p> : <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {shown.map((tour) => {
-            const price = tourPrice(tour.slug);
+            const price = tour.priceAmount ? { amount: tour.priceAmount, caption: tour.priceCaption || 'Per Person' } : tourPrice(tour.slug);
             return <article key={tour.slug} className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl">
               <div className="relative h-64 overflow-hidden">
                 <Image src={tour.image} alt={tour.imageAlt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
