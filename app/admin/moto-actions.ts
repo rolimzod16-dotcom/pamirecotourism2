@@ -22,9 +22,28 @@ function refresh(slug?: string) {
 export async function saveMotoAction(input: unknown, creating: boolean): Promise<{ error: string }> {
   await requireAdmin();
   const draft = input && typeof input === 'object' ? { ...(input as Record<string, unknown>) } : {};
-  if (creating) draft.slug = slugifyMoto(typeof draft.title === 'string' ? draft.title : '');
+  const text = (value: unknown) => typeof value === 'string' ? value.trim() : '';
+  const titleRu = text(draft.titleRu);
+  const titleEn = text(draft.titleEn);
+  const title = titleEn || titleRu || text(draft.title);
+  if (!title) return { error: 'Напишите название на русском или английском. Можно любой текст, цифры и знаки.' };
+  draft.titleRu = titleRu;
+  draft.titleEn = titleEn;
+  draft.title = title;
+  draft.blurbRu = text(draft.blurbRu);
+  draft.blurbEn = text(draft.blurbEn);
+  draft.blurb = text(draft.blurbEn) || text(draft.blurbRu) || text(draft.blurb) || title;
+  draft.detailsRu = text(draft.detailsRu);
+  draft.detailsEn = text(draft.detailsEn);
+  draft.details = text(draft.detailsEn) || text(draft.detailsRu) || text(draft.details);
+  if (creating || typeof draft.slug !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(draft.slug)) draft.slug = slugifyMoto(titleEn || titleRu || title);
   const parsed = motoSchema.safeParse(draft);
-  if (!parsed.success) return { error: 'Проверьте название.' };
+  if (!parsed.success) {
+    const field = String(parsed.error.issues[0]?.path[0] ?? '');
+    if (field === 'gallery') return { error: 'Фото не подошло. Загрузите JPG, PNG или WebP, либо вставьте путь с /photos/.' };
+    if (field === 'price') return { error: 'Цена должна быть числом. Пустое поле значит «по запросу».' };
+    return { error: 'Не сохранилось. Проверьте фото и цену. Название может быть любым.' };
+  }
   let motorcycle = parsed.data;
   if (!motorcycle.blurb) motorcycle = { ...motorcycle, blurb: motorcycle.title };
   const all = await listMotorcycles();

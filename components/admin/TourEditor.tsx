@@ -76,7 +76,7 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
   return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
     <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
-      <label className={label}>Название<input className={field} value={tour.title} onChange={(event) => set('title', event.target.value)} required /></label>
+      <label className={`${label} sm:col-span-2`}>Название<input className={field} value={tour.title} onChange={(event) => set('title', event.target.value)} required /><span className="mt-1 block text-xs font-normal text-slate">Любой текст: русский, английский, цифры и знаки. Адрес страницы сделается сам.</span></label>
       <label className={label}>Категория<select className={field} value={tour.category} onChange={(event) => set('category', event.target.value as StoredTour['category'])}><option value="driving">4x4 / дорога</option><option value="trekking">Треккинг</option></select></label>
       <label className={label}>Цена, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
       <label className={label}>Дней<input className={field} inputMode="numeric" value={days} onChange={(event) => setDays(event.target.value)} /></label>

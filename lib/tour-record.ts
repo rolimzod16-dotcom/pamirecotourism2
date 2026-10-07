@@ -4,7 +4,7 @@ import { tours, type Tour } from '@/data/tours';
 import { heroSlides, tourPhotos } from '@/data/photos';
 
 const tones = ['forest', 'leaf', 'alert', 'earth'] as const;
-const plain = (max: number) => z.string().max(max).transform((value) => value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').replace(/<[^>]*>/g, '').trim());
+const plain = (max: number) => z.string().transform((value) => value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max));
 const imageSrc = z.string().trim().max(500).refine((value) => {
   if (value.startsWith('/photos/') && !value.includes('..') && !value.includes('\\')) return true;
   if (value.startsWith('/api/media?src=')) {
@@ -16,7 +16,7 @@ const imageSrc = z.string().trim().max(500).refine((value) => {
 
 export const tourSchema = z.object({
   slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80),
-  title: plain(160).pipe(z.string().min(2).max(160)),
+  title: plain(500).pipe(z.string().min(1).max(500)),
   category: z.enum(['trekking', 'driving']),
   price: z.number().int().min(0).max(100000).nullable(),
   days: z.number().int().min(1).max(90).nullable(),
@@ -33,7 +33,7 @@ export const tourSchema = z.object({
   level: plain(40),
   levelTone: z.enum(tones),
   rating: plain(40),
-  image: z.string().max(500),
+  image: z.string().transform((value) => value.slice(0, 500)),
   imageAlt: plain(180),
   gallery: z.array(z.object({ src: imageSrc, alt: plain(180) })).max(16),
   regions: z.array(z.enum(['pamir-highway', 'fan-mountains', 'wakhan', 'sarez'])).max(4),

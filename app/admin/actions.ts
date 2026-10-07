@@ -60,9 +60,18 @@ export async function logoutAction() {
 export async function saveTourAction(input: unknown, creating: boolean): Promise<{ error: string }> {
   await requireAdmin();
   const draft = input && typeof input === 'object' ? { ...(input as Record<string, unknown>) } : {};
-  if (creating) draft.slug = slugify(typeof draft.title === 'string' ? draft.title : '');
+  const title = typeof draft.title === 'string' ? draft.title.trim() : '';
+  if (!title) return { error: 'Напишите название. Можно любой текст: русский, английский, цифры и знаки.' };
+  if (Array.isArray(draft.destinations)) draft.destinations = draft.destinations.filter((item) => typeof item === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item));
+  if (creating || typeof draft.slug !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(draft.slug)) draft.slug = slugify(title);
   const parsed = tourSchema.safeParse(draft);
-  if (!parsed.success) return { error: 'Проверьте название и добавьте хотя бы одно фото.' };
+  if (!parsed.success) {
+    const field = String(parsed.error.issues[0]?.path[0] ?? '');
+    if (field === 'gallery') return { error: 'Фото не подошло. Загрузите JPG, PNG или WebP, либо вставьте путь с /photos/.' };
+    if (field === 'price') return { error: 'Цена должна быть числом. Пустое поле значит «по запросу».' };
+    if (field === 'days') return { error: 'Количество дней должно быть числом или остаться пустым.' };
+    return { error: 'Не сохранилось. Проверьте фото и числа. Название может быть любым.' };
+  }
   let tour = parsed.data;
   if (!tour.gallery.length) return { error: 'Добавьте хотя бы одно фото.' };
   if (!tour.hook) tour = { ...tour, hook: tour.blurb || tour.title };

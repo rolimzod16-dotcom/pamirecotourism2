@@ -8,7 +8,7 @@ const field = 'mt-1 w-full min-w-0 rounded-xl border border-pine/15 bg-white px-
 const label = 'block text-sm font-semibold';
 
 export function MotoEditor({ initial, creating }: { initial: StoredMoto; creating: boolean }) {
-  const [motorcycle, setMotorcycle] = useState(initial);
+  const [motorcycle, setMotorcycle] = useState(() => initial.titleRu || initial.titleEn ? initial : { ...initial, titleEn: initial.title, blurbEn: initial.blurb, detailsEn: initial.details });
   const [price, setPrice] = useState(initial.price === null ? '' : String(initial.price));
   const [photoPath, setPhotoPath] = useState('');
   const [error, setError] = useState('');
@@ -26,7 +26,7 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
       const response = await fetch('/api/admin/upload', { method: 'POST', body });
       const payload = await response.json() as { url?: string; error?: string };
       if (!response.ok || !payload.url) throw new Error(payload.error || 'Фото не загрузилось.');
-      set('gallery', [...motorcycle.gallery, { src: payload.url, alt: motorcycle.title || 'Pamir motorcycle' }].slice(0, 16));
+      set('gallery', [...motorcycle.gallery, { src: payload.url, alt: motorcycle.titleEn || motorcycle.titleRu || motorcycle.title || 'Pamir motorcycle' }].slice(0, 16));
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : 'Фото не загрузилось.');
     } finally { setUploading(false); }
@@ -37,7 +37,7 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
     const sitePhoto = src.startsWith('/photos/') && !src.includes('..');
     const uploaded = src.startsWith('/api/media?src=') && !src.includes('..');
     if (!sitePhoto && !uploaded) { setError('Путь должен начинаться с /photos/'); return; }
-    set('gallery', [...motorcycle.gallery, { src, alt: motorcycle.title || 'Pamir motorcycle' }].slice(0, 16));
+    set('gallery', [...motorcycle.gallery, { src, alt: motorcycle.titleEn || motorcycle.titleRu || motorcycle.title || 'Pamir motorcycle' }].slice(0, 16));
     setPhotoPath(''); setError('');
   };
 
@@ -54,11 +54,21 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
   return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
     <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
-      <label className={label}>Название<input className={field} value={motorcycle.title} onChange={(event) => set('title', event.target.value)} required /></label>
+      <div className="grid gap-4 rounded-xl bg-sand p-4">
+        <p className="font-display text-lg font-bold">Русский</p>
+        <label className={label}>Название<input className={field} value={motorcycle.titleRu} onChange={(event) => set('titleRu', event.target.value)} /></label>
+        <label className={label}>Короткое описание<textarea className={field} rows={3} value={motorcycle.blurbRu} onChange={(event) => set('blurbRu', event.target.value)} /></label>
+        <label className={label}>Подробности<textarea className={field} rows={5} value={motorcycle.detailsRu} onChange={(event) => set('detailsRu', event.target.value)} /></label>
+      </div>
+      <div className="grid gap-4 rounded-xl bg-sand p-4">
+        <p className="font-display text-lg font-bold">English</p>
+        <label className={label}>Name<input className={field} value={motorcycle.titleEn} onChange={(event) => set('titleEn', event.target.value)} /></label>
+        <label className={label}>Short description<textarea className={field} rows={3} value={motorcycle.blurbEn} onChange={(event) => set('blurbEn', event.target.value)} /></label>
+        <label className={label}>Details<textarea className={field} rows={5} value={motorcycle.detailsEn} onChange={(event) => set('detailsEn', event.target.value)} /></label>
+      </div>
+      <p className="text-xs text-slate sm:col-span-2">Достаточно одного названия, на любом языке. Цифры и знаки тоже можно. Адрес страницы сделается сам.</p>
       <label className={label}>Цена за день, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
       <label className="flex items-center gap-2 text-sm font-semibold sm:mt-7"><input type="checkbox" checked={motorcycle.published} onChange={(event) => set('published', event.target.checked)} />Показывать на сайте</label>
-      <label className={`${label} sm:col-span-2`}>Короткое описание<textarea className={field} rows={3} value={motorcycle.blurb} onChange={(event) => set('blurb', event.target.value)} /></label>
-      <label className={`${label} sm:col-span-2`}>Подробности<textarea className={field} rows={6} value={motorcycle.details} onChange={(event) => set('details', event.target.value)} /></label>
     </section>
     <section className="rounded-2xl bg-white p-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-display text-xl">Фото</h2><label className="cursor-pointer rounded-xl bg-forest px-4 py-2 text-sm font-semibold text-white">{uploading ? 'Загрузка…' : 'Загрузить фото'}<input className="sr-only" type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} onChange={(event) => { void upload(event.target.files?.[0]); event.target.value = ''; }} /></label></div>
