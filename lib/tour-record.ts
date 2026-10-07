@@ -9,7 +9,7 @@ const imageSrc = z.string().trim().max(500).refine((value) => {
   if (value.startsWith('/photos/') && !value.includes('..') && !value.includes('\\')) return true;
   if (value.startsWith('/api/media?src=')) {
     const source = new URL(value, 'https://pamirecotourism.com').searchParams.get('src') || '';
-    return source.startsWith('tours/') && !source.includes('..') && !source.includes('\\');
+    return (source.startsWith('tours/') || source.startsWith('motorcycles/')) && !source.includes('..') && !source.includes('\\');
   }
   return value.startsWith('https://') && !value.includes(' ');
 }, 'Недопустимый адрес фото');

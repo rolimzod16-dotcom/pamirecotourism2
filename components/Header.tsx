@@ -9,6 +9,7 @@ const c = chrome.header;
 const links = [
   { label: 'Home', href: '/' },
   { label: 'Tours & Activities', href: '/tours' },
+  { label: 'Motorcycles', href: '/motorcycles' },
   { label: 'Destinations', href: '/destinations' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'About Us', href: '/about' },

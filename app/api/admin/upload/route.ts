@@ -13,9 +13,10 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) return Response.json({ error: 'Файл не выбран.' }, { status: 400 });
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return Response.json({ error: 'Нужна картинка JPG, PNG или WebP.' }, { status: 400 });
   if (file.size > 8 * 1024 * 1024) return Response.json({ error: 'Файл больше 8 МБ.' }, { status: 400 });
+  const folder = form.get('folder') === 'motorcycles' ? 'motorcycles' : 'tours';
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '').slice(0, 60) || 'photo.jpg';
   try {
-    const blob = await put(`tours/${Date.now()}-${safeName}`, file, { access: 'private', addRandomSuffix: true });
+    const blob = await put(`${folder}/${Date.now()}-${safeName}`, file, { access: 'private', addRandomSuffix: true });
     return Response.json({ url: `/api/media?src=${encodeURIComponent(blob.pathname)}` });
   } catch (error) {
     console.error('Tour photo upload failed', error instanceof Error ? error.message : 'error');
