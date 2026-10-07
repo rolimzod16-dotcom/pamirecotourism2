@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { saveMotoAction } from '@/app/admin/moto-actions';
 import type { StoredMoto } from '@/lib/moto-record';
 
@@ -14,7 +14,20 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const set = <K extends keyof StoredMoto>(key: K, value: StoredMoto[K]) => setMotorcycle((current) => ({ ...current, [key]: value }));
+  const formRef = useRef<HTMLFormElement>(null);
+  const textNames = ['titleRu', 'titleEn', 'blurbRu', 'blurbEn', 'detailsRu', 'detailsEn'] as const;
+  const withTypedText = (current: StoredMoto) => {
+    const form = formRef.current;
+    if (!form) return current;
+    const data = new FormData(form);
+    const next = { ...current };
+    for (const name of textNames) {
+      const value = data.get(name);
+      if (typeof value === 'string') next[name] = value;
+    }
+    return next;
+  };
+  const set = <K extends keyof StoredMoto>(key: K, value: StoredMoto[K]) => setMotorcycle((current) => ({ ...withTypedText(current), [key]: value }));
 
   const upload = async (file: File | undefined) => {
     if (!file) return;
@@ -26,7 +39,12 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
       const response = await fetch('/api/admin/upload', { method: 'POST', body });
       const payload = await response.json() as { url?: string; error?: string };
       if (!response.ok || !payload.url) throw new Error(payload.error || 'Фото не загрузилось.');
-      set('gallery', [...motorcycle.gallery, { src: payload.url, alt: motorcycle.titleEn || motorcycle.titleRu || motorcycle.title || 'Pamir motorcycle' }].slice(0, 16));
+      const src = payload.url;
+      setMotorcycle((current) => {
+        const next = withTypedText(current);
+        const alt = next.titleEn || next.titleRu || next.title || 'Pamir motorcycle';
+        return { ...next, gallery: [...next.gallery, { src, alt }].slice(0, 16) };
+      });
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : 'Фото не загрузилось.');
     } finally { setUploading(false); }
@@ -37,7 +55,11 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
     const sitePhoto = src.startsWith('/photos/') && !src.includes('..');
     const uploaded = src.startsWith('/api/media?src=') && !src.includes('..');
     if (!sitePhoto && !uploaded) { setError('Путь должен начинаться с /photos/'); return; }
-    set('gallery', [...motorcycle.gallery, { src, alt: motorcycle.titleEn || motorcycle.titleRu || motorcycle.title || 'Pamir motorcycle' }].slice(0, 16));
+    setMotorcycle((current) => {
+      const next = withTypedText(current);
+      const alt = next.titleEn || next.titleRu || next.title || 'Pamir motorcycle';
+      return { ...next, gallery: [...next.gallery, { src, alt }].slice(0, 16) };
+    });
     setPhotoPath(''); setError('');
   };
 
@@ -45,26 +67,26 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
     setSaving(true); setError('');
     const numericPrice = price.trim() === '' ? null : Number(price);
     const result = await saveMotoAction({
-      ...motorcycle,
+      ...withTypedText(motorcycle),
       price: numericPrice !== null && Number.isFinite(numericPrice) ? Math.round(numericPrice) : null,
     }, creating);
     if (result?.error) { setError(result.error); setSaving(false); }
   };
 
-  return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
+  return <form ref={formRef} className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
     <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <div className="grid gap-4 rounded-xl bg-sand p-4">
         <p className="font-display text-lg font-bold">Русский</p>
-        <label className={label}>Название<input className={field} value={motorcycle.titleRu} onChange={(event) => set('titleRu', event.target.value)} /></label>
-        <label className={label}>Короткое описание<textarea className={field} rows={3} value={motorcycle.blurbRu} onChange={(event) => set('blurbRu', event.target.value)} /></label>
-        <label className={label}>Подробности<textarea className={field} rows={5} value={motorcycle.detailsRu} onChange={(event) => set('detailsRu', event.target.value)} /></label>
+        <label className={label}>Название<input name="titleRu" className={field} value={motorcycle.titleRu} onChange={(event) => set('titleRu', event.target.value)} /></label>
+        <label className={label}>Короткое описание<textarea name="blurbRu" className={field} rows={3} value={motorcycle.blurbRu} onChange={(event) => set('blurbRu', event.target.value)} /></label>
+        <label className={label}>Подробности<textarea name="detailsRu" className={field} rows={5} value={motorcycle.detailsRu} onChange={(event) => set('detailsRu', event.target.value)} /></label>
       </div>
       <div className="grid gap-4 rounded-xl bg-sand p-4">
         <p className="font-display text-lg font-bold">English</p>
-        <label className={label}>Name<input className={field} value={motorcycle.titleEn} onChange={(event) => set('titleEn', event.target.value)} /></label>
-        <label className={label}>Short description<textarea className={field} rows={3} value={motorcycle.blurbEn} onChange={(event) => set('blurbEn', event.target.value)} /></label>
-        <label className={label}>Details<textarea className={field} rows={5} value={motorcycle.detailsEn} onChange={(event) => set('detailsEn', event.target.value)} /></label>
+        <label className={label}>Name<input name="titleEn" className={field} value={motorcycle.titleEn} onChange={(event) => set('titleEn', event.target.value)} /></label>
+        <label className={label}>Short description<textarea name="blurbEn" className={field} rows={3} value={motorcycle.blurbEn} onChange={(event) => set('blurbEn', event.target.value)} /></label>
+        <label className={label}>Details<textarea name="detailsEn" className={field} rows={5} value={motorcycle.detailsEn} onChange={(event) => set('detailsEn', event.target.value)} /></label>
       </div>
       <p className="text-xs text-slate sm:col-span-2">Достаточно одного названия, на любом языке. Цифры и знаки тоже можно. Адрес страницы сделается сам.</p>
       <label className={label}>Цена за день, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>

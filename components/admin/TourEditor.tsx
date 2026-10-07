@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { saveTourAction } from '@/app/admin/actions';
 import type { StoredTour } from '@/lib/tour-record';
 
@@ -34,8 +34,21 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const textNames = ['title', 'badge', 'blurb', 'overview', 'route', 'level', 'season', 'groupSize', 'distance', 'maxAltitude'] as const;
+  const withTypedText = (current: StoredTour) => {
+    const form = formRef.current;
+    if (!form) return current;
+    const data = new FormData(form);
+    const next = { ...current };
+    for (const name of textNames) {
+      const value = data.get(name);
+      if (typeof value === 'string') next[name] = value;
+    }
+    return next;
+  };
 
-  const set = <K extends keyof StoredTour>(key: K, value: StoredTour[K]) => setTour((current) => ({ ...current, [key]: value }));
+  const set = <K extends keyof StoredTour>(key: K, value: StoredTour[K]) => setTour((current) => ({ ...withTypedText(current), [key]: value }));
   const toggle = <K extends 'regions' | 'activities'>(key: K, value: StoredTour[K][number]) => {
     const current = tour[key] as string[];
     set(key, (current.includes(value) ? current.filter((item) => item !== value) : [...current, value]) as StoredTour[K]);
@@ -61,7 +74,7 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
     const numericPrice = price.trim() === '' ? null : Number(price);
     const numericDays = days.trim() === '' ? null : Number(days);
     const result = await saveTourAction({
-      ...tour,
+      ...withTypedText(tour),
       price: numericPrice !== null && Number.isFinite(numericPrice) ? Math.round(numericPrice) : null,
       days: numericDays !== null && Number.isFinite(numericDays) ? Math.round(numericDays) : null,
       included: lines(included),
@@ -73,22 +86,22 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
     if (result?.error) { setError(result.error); setSaving(false); }
   };
 
-  return <form className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
+  return <form ref={formRef} className="grid gap-6" onSubmit={(event) => { event.preventDefault(); void save(); }}>
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
     <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
-      <label className={`${label} sm:col-span-2`}>Название<input className={field} value={tour.title} onChange={(event) => set('title', event.target.value)} required /><span className="mt-1 block text-xs font-normal text-slate">Любой текст: русский, английский, цифры и знаки. Адрес страницы сделается сам.</span></label>
+      <label className={`${label} sm:col-span-2`}>Название<input name="title" className={field} value={tour.title} onChange={(event) => set('title', event.target.value)} required /><span className="mt-1 block text-xs font-normal text-slate">Любой текст: русский, английский, цифры и знаки. Адрес страницы сделается сам.</span></label>
       <label className={label}>Категория<select className={field} value={tour.category} onChange={(event) => set('category', event.target.value as StoredTour['category'])}><option value="driving">4x4 / дорога</option><option value="trekking">Треккинг</option></select></label>
       <label className={label}>Цена, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
       <label className={label}>Дней<input className={field} inputMode="numeric" value={days} onChange={(event) => setDays(event.target.value)} /></label>
-      <label className={label}>Короткий бейдж<input className={field} value={tour.badge} placeholder="8 Days • 4x4 Safari" onChange={(event) => set('badge', event.target.value)} /></label>
-      <label className={`${label} sm:col-span-2`}>Короткое описание на карточке<textarea className={field} rows={3} value={tour.blurb} onChange={(event) => set('blurb', event.target.value)} /></label>
-      <label className={`${label} sm:col-span-2`}>Полное описание<textarea className={field} rows={5} value={tour.overview} onChange={(event) => set('overview', event.target.value)} /></label>
-      <label className={label}>Маршрут<input className={field} value={tour.route} onChange={(event) => set('route', event.target.value)} /></label>
-      <label className={label}>Сложность<input className={field} value={tour.level} onChange={(event) => set('level', event.target.value)} /></label>
-      <label className={label}>Сезон<input className={field} value={tour.season} onChange={(event) => set('season', event.target.value)} /></label>
-      <label className={label}>Группа<input className={field} value={tour.groupSize} onChange={(event) => set('groupSize', event.target.value)} /></label>
-      <label className={label}>Дистанция<input className={field} value={tour.distance} onChange={(event) => set('distance', event.target.value)} /></label>
-      <label className={label}>Высота<input className={field} value={tour.maxAltitude} onChange={(event) => set('maxAltitude', event.target.value)} /></label>
+      <label className={label}>Короткий бейдж<input name="badge" className={field} value={tour.badge} placeholder="8 Days • 4x4 Safari" onChange={(event) => set('badge', event.target.value)} /></label>
+      <label className={`${label} sm:col-span-2`}>Короткое описание на карточке<textarea name="blurb" className={field} rows={3} value={tour.blurb} onChange={(event) => set('blurb', event.target.value)} /></label>
+      <label className={`${label} sm:col-span-2`}>Полное описание<textarea name="overview" className={field} rows={5} value={tour.overview} onChange={(event) => set('overview', event.target.value)} /></label>
+      <label className={label}>Маршрут<input name="route" className={field} value={tour.route} onChange={(event) => set('route', event.target.value)} /></label>
+      <label className={label}>Сложность<input name="level" className={field} value={tour.level} onChange={(event) => set('level', event.target.value)} /></label>
+      <label className={label}>Сезон<input name="season" className={field} value={tour.season} onChange={(event) => set('season', event.target.value)} /></label>
+      <label className={label}>Группа<input name="groupSize" className={field} value={tour.groupSize} onChange={(event) => set('groupSize', event.target.value)} /></label>
+      <label className={label}>Дистанция<input name="distance" className={field} value={tour.distance} onChange={(event) => set('distance', event.target.value)} /></label>
+      <label className={label}>Высота<input name="maxAltitude" className={field} value={tour.maxAltitude} onChange={(event) => set('maxAltitude', event.target.value)} /></label>
     </section>
     <section className="grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <fieldset><legend className={label}>Где показывать в фильтре</legend><div className="mt-2 flex flex-wrap gap-3">{regions.map(([value, name]) => <label key={value} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={tour.regions.includes(value)} onChange={() => toggle('regions', value)} />{name}</label>)}</div></fieldset>
