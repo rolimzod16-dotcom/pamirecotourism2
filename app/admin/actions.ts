@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { allowRequest } from '@/lib/request-guard';
 import { signAdminToken, verifyAdminToken } from '@/lib/admin-token';
-import { slugify, tourSchema, type StoredTour } from '@/lib/tour-record';
+import { slugify, tourSchema, uniqueSlug, type StoredTour } from '@/lib/tour-record';
 import { getTour, listTours, saveTours } from '@/lib/tour-store';
 
 const cookieName = 'eco_admin';
@@ -60,9 +60,9 @@ export async function logoutAction() {
 export async function saveTourAction(input: unknown, creating: boolean): Promise<{ error: string }> {
   await requireAdmin();
   const draft = input && typeof input === 'object' ? { ...(input as Record<string, unknown>) } : {};
-  if (creating && !draft.slug && typeof draft.title === 'string') draft.slug = slugify(draft.title);
+  if (creating) draft.slug = slugify(typeof draft.title === 'string' ? draft.title : '');
   const parsed = tourSchema.safeParse(draft);
-  if (!parsed.success) return { error: 'Проверьте название, ссылку и фото. Ссылка может содержать только латинские буквы, цифры и дефис.' };
+  if (!parsed.success) return { error: 'Проверьте название и добавьте хотя бы одно фото.' };
   let tour = parsed.data;
   if (!tour.gallery.length) return { error: 'Добавьте хотя бы одно фото.' };
   if (!tour.hook) tour = { ...tour, hook: tour.blurb || tour.title };
@@ -71,9 +71,7 @@ export async function saveTourAction(input: unknown, creating: boolean): Promise
   if (!tour.badge) tour = { ...tour, badge: tour.days ? `${tour.days} days` : 'Dates on request' };
   const all = await listTours();
   if (creating) {
-    let slug = tour.slug;
-    if (all.some((item) => item.slug === slug)) slug = `${slug}-${all.length + 1}`.replace(/[^a-z0-9-]/g, '').slice(0, 80);
-    tour = { ...tour, slug, sort: all.reduce((max, item) => Math.max(max, item.sort), -1) + 1 };
+    tour = { ...tour, slug: uniqueSlug(tour.slug, all.map((item) => item.slug)), sort: all.reduce((max, item) => Math.max(max, item.sort), -1) + 1 };
   } else if (!all.some((item) => item.slug === tour.slug)) {
     return { error: 'Тур не найден.' };
   }

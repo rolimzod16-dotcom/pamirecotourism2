@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { motoSchema, slugifyMoto, type StoredMoto } from '@/lib/moto-record';
+import { uniqueSlug } from '@/lib/tour-record';
 import { listMotorcycles, saveMotorcycles } from '@/lib/moto-store';
 import { cookies } from 'next/headers';
 import { verifyAdminToken } from '@/lib/admin-token';
@@ -21,16 +22,14 @@ function refresh(slug?: string) {
 export async function saveMotoAction(input: unknown, creating: boolean): Promise<{ error: string }> {
   await requireAdmin();
   const draft = input && typeof input === 'object' ? { ...(input as Record<string, unknown>) } : {};
-  if (creating && !draft.slug && typeof draft.title === 'string') draft.slug = slugifyMoto(draft.title);
+  if (creating) draft.slug = slugifyMoto(typeof draft.title === 'string' ? draft.title : '');
   const parsed = motoSchema.safeParse(draft);
-  if (!parsed.success) return { error: 'Проверьте название и ссылку. Ссылка может содержать только латинские буквы, цифры и дефис.' };
+  if (!parsed.success) return { error: 'Проверьте название.' };
   let motorcycle = parsed.data;
   if (!motorcycle.blurb) motorcycle = { ...motorcycle, blurb: motorcycle.title };
   const all = await listMotorcycles();
   if (creating) {
-    let slug = motorcycle.slug;
-    if (all.some((item) => item.slug === slug)) slug = `${slug}-${all.length + 1}`.replace(/[^a-z0-9-]/g, '').slice(0, 80);
-    motorcycle = { ...motorcycle, slug, sort: all.reduce((max, item) => Math.max(max, item.sort), -1) + 1 };
+    motorcycle = { ...motorcycle, slug: uniqueSlug(motorcycle.slug, all.map((item) => item.slug)), sort: all.reduce((max, item) => Math.max(max, item.sort), -1) + 1 };
   } else if (!all.some((item) => item.slug === motorcycle.slug)) {
     return { error: 'Мотоцикл не найден.' };
   }

@@ -55,7 +55,6 @@ export function MotoEditor({ initial, creating }: { initial: StoredMoto; creatin
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
     <section className="grid gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <label className={label}>Название<input className={field} value={motorcycle.title} onChange={(event) => set('title', event.target.value)} required /></label>
-      <label className={label}>Ссылка{creating ? <input className={field} value={motorcycle.slug} placeholder="honda-crf" onChange={(event) => set('slug', event.target.value)} /> : <input className={`${field} bg-mist`} value={motorcycle.slug} readOnly />}</label>
       <label className={label}>Цена за день, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
       <label className="flex items-center gap-2 text-sm font-semibold sm:mt-7"><input type="checkbox" checked={motorcycle.published} onChange={(event) => set('published', event.target.checked)} />Показывать на сайте</label>
       <label className={`${label} sm:col-span-2`}>Короткое описание<textarea className={field} rows={3} value={motorcycle.blurb} onChange={(event) => set('blurb', event.target.value)} /></label>

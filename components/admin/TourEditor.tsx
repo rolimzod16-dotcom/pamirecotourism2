@@ -77,7 +77,6 @@ export function TourEditor({ initial, creating }: { initial: StoredTour; creatin
     {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
     <section className="grid gap-4 rounded-2xl bg-white p-5 shadow-sm sm:grid-cols-2">
       <label className={label}>Название<input className={field} value={tour.title} onChange={(event) => set('title', event.target.value)} required /></label>
-      <label className={label}>Ссылка{creating ? <input className={field} value={tour.slug} placeholder="pamir-highway" onChange={(event) => set('slug', event.target.value)} /> : <input className={`${field} bg-mist`} value={tour.slug} readOnly />}</label>
       <label className={label}>Категория<select className={field} value={tour.category} onChange={(event) => set('category', event.target.value as StoredTour['category'])}><option value="driving">4x4 / дорога</option><option value="trekking">Треккинг</option></select></label>
       <label className={label}>Цена, USD<input className={field} inputMode="numeric" value={price} placeholder="Пусто = по запросу" onChange={(event) => setPrice(event.target.value)} /></label>
       <label className={label}>Дней<input className={field} inputMode="numeric" value={days} onChange={(event) => setDays(event.target.value)} /></label>

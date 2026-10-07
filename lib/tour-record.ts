@@ -58,9 +58,25 @@ export const tourSchema = z.object({
 export type StoredTour = z.infer<typeof tourSchema>;
 export type HomeCard = CatalogTour & { priceAmount: string; priceCaption: string };
 
-export function slugify(value: string) {
-  const slug = value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
-  return slug || 'tour';
+const cyrillic: Record<string, string> = {
+  а: 'a', б: 'b', в: 'v', г: 'g', ғ: 'gh', д: 'd', е: 'e', ё: 'yo', ж: 'zh', з: 'z', и: 'i', ӣ: 'i', й: 'y', к: 'k', қ: 'q', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ӯ: 'u', ф: 'f', х: 'kh', ҳ: 'h', ц: 'ts', ч: 'ch', ҷ: 'j', ш: 'sh', щ: 'shch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+};
+
+export function slugify(value: string, fallback = 'tour') {
+  const mapped = [...value.toLowerCase()].map((char) => cyrillic[char] ?? char).join('');
+  const slug = mapped.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  return slug || fallback;
+}
+
+export function uniqueSlug(base: string, taken: Iterable<string>) {
+  const used = new Set(taken);
+  if (!used.has(base)) return base;
+  for (let number = 2; number < 1000; number += 1) {
+    const suffix = `-${number}`;
+    const next = `${base.slice(0, 80 - suffix.length)}${suffix}`;
+    if (!used.has(next)) return next;
+  }
+  return `${base.slice(0, 66)}-${Date.now().toString(36)}`.slice(0, 80);
 }
 
 export function priceLabel(price: number | null) {
