@@ -64,7 +64,7 @@ export const home = {
     date: 'Preferred date or month', datePrompt: 'For example, June 2027', group: 'Group size', flexibility: 'My dates are flexible',
     name: 'Your name', email: 'Email address', phone: 'Phone / WhatsApp', method: 'Preferred contact method', methods: ['Email', 'WhatsApp'],
     honeypot: 'Leave this field empty',
-    successTitle: 'Thank you for planning with us.', successBody: 'This is a prototype: the inquiry was accepted by a demo endpoint but was not emailed or saved. Please contact the team directly.',
+    successTitle: 'Thank you for planning with us.', successSaved: 'The Rushan team can see this inquiry. Message WhatsApp as well if your dates are soon.', successBody: 'We could not store that inquiry. Please contact the team directly.',
     chat: 'Chat on WhatsApp', error: 'Something went wrong. Please try again, or contact us directly.', retry: 'Try again',
     contactTitle: 'Prefer to talk directly?', contactIntro: 'Reach the team in Rushan by WhatsApp, email or phone.',
     required: 'This field is required.', invalidEmail: 'Enter a valid email address.', invalidPhone: 'Enter a phone or WhatsApp number.', invalidGroup: 'Enter a group size of 1 or more.',

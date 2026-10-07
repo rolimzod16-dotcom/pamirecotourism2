@@ -45,7 +45,7 @@ export const pages = {
   },
   newsletter: {
     title: 'Stay in touch', intro: 'Occasional journey updates. Demo sign-up only until mailing is connected.', label: 'Email address for newsletter', placeholder: 'Your email address', submit: 'Join the list', sending: 'Checking…',
-    success: 'Email validated. This prototype has not subscribed you yet.', error: 'We could not check that address. Please try again.', invalid: 'Enter a valid email address.',
+    success: 'Saved for the team. This does not send emails yet.', error: 'We could not check that address. Please try again.', invalid: 'Enter a valid email address.',
   },
   system: {
     notFoundTitle: 'This path is off the map.', notFoundText: 'The page you requested could not be found.', home: 'Back to home', tours: 'Explore tours',
