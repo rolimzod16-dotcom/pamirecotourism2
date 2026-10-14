@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, Menu, Phone, User, X, Compass } from 'lucide-react';
 import { chrome } from '@/content/chrome';
+import { LogoMark } from '@/components/LogoMark';
 
 const c = chrome.header;
 const links = [
@@ -16,9 +17,6 @@ const links = [
   { label: 'Contact', href: '/contact' },
 ];
 
-function Mark() {
-  return <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#A22900" /><path d="M7 35 L17 16 L24 27 L31 12 L41 35 Z" fill="#F8F6F0" /><circle cx="35" cy="13" r="2.6" fill="#CA8A04" /></svg>;
-}
 
 export function Header() {
   const pathname = usePathname();
@@ -29,7 +27,7 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50 bg-paper/90 shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-12">
         <Link href="/" aria-label={c.home} className="flex shrink-0 items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <Mark />
+          <LogoMark className="h-10 w-10" />
           <span className="flex flex-col"><span className="font-display text-base font-semibold leading-none tracking-tight text-pine sm:text-lg xl:text-xl">Pamir Ecotourism</span><span className="mt-0.5 hidden font-display text-[11px] font-bold uppercase tracking-wider text-slate 2xl:block">Tajikistan Expeditions</span></span>
         </Link>
         <nav aria-label={c.mainNav} className="hidden items-center gap-5 xl:flex">

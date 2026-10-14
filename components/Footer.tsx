@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Camera, Leaf, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { NewsletterForm } from './NewsletterForm';
 import { site } from '@/data/site';
+import { LogoMark } from '@/components/LogoMark';
 
 const expeditions = [
   ['4x4 Pamir Highway Odyssey', '/tours/pamir-highway-4x4'],
@@ -19,15 +20,12 @@ const places = [
   ['Khorog & Murghab', '/destinations/khorog'],
 ] as const;
 
-function Mark() {
-  return <svg viewBox="0 0 48 48" className="h-9 w-9 shrink-0" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#A22900" /><path d="M7 35 L17 16 L24 27 L31 12 L41 35 Z" fill="#F8F6F0" /><circle cx="35" cy="13" r="2.6" fill="#CA8A04" /></svg>;
-}
 
 export function Footer() {
   return <footer className="bg-mist text-ink"><div className="mx-auto max-w-7xl px-6 pb-8 pt-20 lg:px-12">
     <div className="grid grid-cols-1 gap-x-8 gap-y-12 border-b border-pine/10 pb-14 md:grid-cols-2 lg:grid-cols-12">
       <div className="flex flex-col gap-4 lg:col-span-4">
-        <Link href="/" className="flex items-center gap-3"><Mark /><span className="font-display text-xl font-semibold text-pine">Pamir Ecotourism</span></Link>
+        <Link href="/" className="flex items-center gap-3"><LogoMark className="h-9 w-9" /><span className="font-display text-xl font-semibold text-pine">Pamir Ecotourism</span></Link>
         <p className="max-w-sm text-sm leading-6 text-ink/70">Authentic, sustainable eco-expeditions across the Roof of the World, the Pamir Mountains, and Tajikistan. Dedicated to conservation and community-based travel.</p>
         <p className="flex items-center gap-2 text-xs text-slate"><Leaf size={16} className="text-leaf" aria-hidden="true" />Community-based operator · Est. 2015</p>
         <div className="flex items-center gap-3 pt-2">
