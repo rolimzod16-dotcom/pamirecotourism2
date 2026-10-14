@@ -9,7 +9,7 @@ import { routesCopy as c } from '@/content/routes';
 import { tourPhotos } from '@/data/photos';
 import { toPublicTour } from '@/lib/tour-record';
 import { listPublished } from '@/lib/tour-store';
-export async function generateMetadata(): Promise<Metadata> { return createMetadata({ title: c.tours.title, description: c.tours.intro, path: '/tours' }); }
+export async function generateMetadata(): Promise<Metadata> { return createMetadata({ title: 'Pamir & Tajikistan Tours: 4x4, Trekking and Lakes', description: 'Pamir Highway 4x4 tours, Wakhan valley trips, Fann Mountains and alpine lake treks, run by a local team from Rushan. Compare routes, length and prices.', path: '/tours' }); }
 export const dynamic = 'force-dynamic';
 export default async function ToursPage() {
   const tours = (await listPublished()).map(toPublicTour);

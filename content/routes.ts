@@ -1,5 +1,5 @@
 export const routesCopy = {
-  common: { home: 'Home', tours: 'Tours', destinations: 'Destinations', placeholder: '[Details to confirm]', imagePlaceholder: 'Photograph', mountainAlt: 'Landscape from a Pamir Ecotourism journey in Tajikistan', breadcrumb: 'Breadcrumb', discover: 'Explore', inquire: 'Plan a trip', whatsapp: 'Chat on WhatsApp' },
+  common: { home: 'Home', tours: 'Tours', destinations: 'Destinations', placeholder: 'On request', imagePlaceholder: 'Photograph', mountainAlt: 'Landscape from a Pamir Ecotourism journey in Tajikistan', breadcrumb: 'Breadcrumb', discover: 'Explore', inquire: 'Plan a trip', whatsapp: 'Chat on WhatsApp' },
   tours: {
     eyebrow: 'PAMIR ECOTOURISM · JOURNEYS', title: 'Journeys in the Pamirs', intro: 'Browse the current journey ideas. Ask the local team to confirm the route, timing, price and availability for your dates.',
     all: 'All', trekking: 'Trekking', driving: 'Driving', filterLabel: 'Filter tours by category', sortLabel: 'Sort journeys',
@@ -11,7 +11,7 @@ export const routesCopy = {
     overview: 'Overview', photos: 'Photographs', itinerary: 'Day-by-day itinerary', itineraryNote: 'Sample day sequence only. Total duration and overnight stops must be confirmed.',
     map: 'Route map', mapNote: 'Illustrative route line only. It is not a navigation map or a confirmed itinerary.',
     included: 'Included', excluded: 'Not included', gear: 'What to bring', safety: 'Safety and support',
-    safetyText: '[Placeholder] Ask the operator to confirm guide arrangements, route briefing, emergency contacts, vehicle condition and current travel conditions in writing.',
+    safetyText: 'Before departure the team goes through the route, altitude, road and weather conditions and emergency contacts with you. Ask for these details in writing with your quote.',
     faq: 'Frequently asked questions', related: 'Related journeys', ask: 'Ask a question', request: 'Request this trip',
     facts: { days: 'Days', distance: 'Distance', altitude: 'Max altitude', difficulty: 'Difficulty', season: 'Season', group: 'Group size', price: 'Price' },
     overnight: 'Overnight', day: 'Day', from: 'From', priceRequest: 'On request', bookingNote: 'Final route, inclusions and quote are confirmed by the local team.',

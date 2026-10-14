@@ -9,11 +9,13 @@ export const seo = {
   // [confirm] Add verified official social profile URLs before launch.
   sameAs: [] as string[],
 };
-export function createMetadata({ title, description, path = '/', image = seo.defaultOgImage }: { title: string; description: string; path?: string; image?: string }): Metadata {
+const snippet = (text: string, max = 158) => { const clean = text.replace(/\s+/g, ' ').trim(); return clean.length <= max ? clean : `${clean.slice(0, clean.lastIndexOf(' ', max - 1))}…`; };
+export function createMetadata({ title, description, path = '/', image = seo.defaultOgImage, absoluteTitle = false }: { title: string; description: string; path?: string; image?: string; absoluteTitle?: boolean }): Metadata {
   const canonical = new URL(path, `${seo.url}/`).toString();
+  description = snippet(description);
   return {
-    title: `${title} | ${seo.name}`, description, metadataBase: new URL(seo.url), alternates: { canonical },
-    openGraph: { type: 'website', title, description, url: canonical, siteName: seo.name, images: [{ url: image, alt: title }] },
+    title: absoluteTitle ? { absolute: title } : `${title} | ${seo.name}`, description, metadataBase: new URL(seo.url), alternates: { canonical },
+    openGraph: { type: 'website', locale: 'en_US', title, description, url: canonical, siteName: seo.name, images: [{ url: image, alt: title }] },
     twitter: { card: 'summary_large_image', title, description, images: [image] },
   };
 }

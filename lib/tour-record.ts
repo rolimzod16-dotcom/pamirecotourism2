@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { catalogTours, type CatalogTour } from '@/content/expedition-home';
 import { tours, type Tour } from '@/data/tours';
 import { heroSlides, tourPhotos } from '@/data/photos';
+import { isPlaceholder, real, realList } from '@/lib/placeholder';
 
 const tones = ['forest', 'leaf', 'alert', 'earth'] as const;
 const plain = (max: number) => z.string().transform((value) => value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max));
@@ -84,26 +85,35 @@ export function priceLabel(price: number | null) {
   return { priceAmount: `$${price.toLocaleString('en-US')}`, priceCaption: 'Per Person', priceUsd: price };
 }
 
+const GENERAL_FAQ = [
+  { question: 'What is included in the price?', answer: 'Your written quote lists transport, accommodation, meals, permits and guiding for your dates, so you know exactly what is covered before you confirm.' },
+  { question: 'Do I need a permit for the Pamirs?', answer: 'Travel in GBAO, the Pamir region, needs a GBAO permit in addition to your Tajik visa or e-visa. The team arranges it together with your booking.' },
+  { question: 'Can the itinerary be changed?', answer: 'Yes. Routes are planned around your dates, pace and interests and can be adjusted before you confirm.' },
+];
+
 export function toPublicTour(tour: StoredTour): Tour {
+  const faq = tour.faq.filter((item) => !isPlaceholder(item.question) && !isPlaceholder(item.answer));
   return {
     slug: tour.slug,
     title: tour.title,
     category: tour.category,
     price: tour.price === null ? 'On request' : tour.price,
     days: tour.days,
-    distance: tour.distance || null,
-    maxAltitude: tour.maxAltitude || null,
-    difficulty: tour.difficulty || null,
-    season: tour.season || null,
-    groupSize: tour.groupSize || null,
-    hook: tour.hook || tour.blurb,
-    overview: tour.overview || tour.blurb,
+    distance: real(tour.distance) || null,
+    maxAltitude: real(tour.maxAltitude) || null,
+    difficulty: real(tour.difficulty) || null,
+    season: real(tour.season) || null,
+    groupSize: real(tour.groupSize) || null,
+    hook: real(tour.hook) || real(tour.blurb),
+    overview: real(tour.overview) || real(tour.hook) || real(tour.blurb),
     gallery: tour.gallery.map((photo) => photo.src),
-    itinerary: tour.itinerary,
-    included: tour.included,
-    excluded: tour.excluded,
-    gear: tour.gear,
-    faq: tour.faq,
+    itinerary: tour.itinerary
+      .filter((day) => !isPlaceholder(day.title))
+      .map((day) => ({ ...day, description: real(day.description), overnight: real(day.overnight) })),
+    included: realList(tour.included),
+    excluded: realList(tour.excluded),
+    gear: realList(tour.gear),
+    faq: faq.length ? faq : GENERAL_FAQ,
     destinations: tour.destinations,
     destinationsConfirmed: false,
   };

@@ -1,6 +1,6 @@
 export const chrome = {
-  homeTitle: 'Home',
-  description: 'Locally rooted journeys in Tajikistan with Pamir Ecotourism.',
+  homeTitle: 'Pamir Tours & Expeditions in Tajikistan',
+  description: 'Local Pamir tour operator from Rushan, Tajikistan: Pamir Highway 4x4 tours, Wakhan valley, Fann Mountains treks, alpine lakes and family homestays.',
   manifestDescription: 'Locally rooted journeys in Tajikistan.',
   header: {
     home: 'Pamir Ecotourism home', tours: 'Tours', destinations: 'Destinations', allTours: 'All tours', trekking: 'Trekking', driving: '4x4 & road trips',

@@ -17,7 +17,7 @@ const icons = [Mountain, Compass, MapPin];
 export function generateStaticParams() { return destinations.map((place) => ({ slug: place.slug })); }
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const place = findDestination(params.slug); if (!place) return {};
-  return createMetadata({ title: place.name, description: place.description, path: `/destinations/${place.slug}`, image: place.image });
+  return createMetadata({ title: `${place.name}, Tajikistan: Travel Guide & Tours`, description: place.description, path: `/destinations/${place.slug}`, image: place.image });
 }
 export const dynamic = 'force-dynamic';
 export default async function DestinationDetail({ params }: { params: { slug: string } }) {

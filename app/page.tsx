@@ -11,8 +11,10 @@ import { toHomeCard } from '@/lib/tour-record';
 import { listPublished } from '@/lib/tour-store';
 
 export const metadata: Metadata = createMetadata({
-  title: 'Home',
-  description: 'Local Pamir expeditions from Rushan, GBAO: 4x4 overland, alpine treks, lakes, and community homestays in Tajikistan.',
+  title: 'Pamir Tours & Expeditions in Tajikistan | Pamir Ecotourism',
+  absoluteTitle: true,
+  description: 'Local Pamir tour operator from Rushan, GBAO: Pamir Highway 4x4 tours, the Wakhan valley, Fann Mountains treks, alpine lakes and family homestays in Tajikistan.',
+  path: '/',
 });
 
 export const dynamic = 'force-dynamic';

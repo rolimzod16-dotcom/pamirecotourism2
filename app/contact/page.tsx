@@ -9,7 +9,7 @@ import { placePhotos } from '@/data/photos';
 import { createMetadata } from '@/lib/seo';
 import { listPublished } from '@/lib/tour-store';
 const c = pages.contact;
-export const metadata: Metadata = createMetadata({ title: c.title, description: c.intro, path: '/contact' });
+export const metadata: Metadata = createMetadata({ title: 'Contact Us — Plan Your Pamir Trip', description: 'Ask the local team about Pamir Highway tours, treks, permits and dates. Reach us on WhatsApp or email, in English or Russian.', path: '/contact' });
 export const dynamic = 'force-dynamic';
 export default async function ContactPage() {
   const activities = (await listPublished()).map((tour) => ({ slug: tour.slug, title: tour.title }));

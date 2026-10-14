@@ -7,7 +7,7 @@ import { listPublishedMotorcycles } from '@/lib/moto-store';
 
 export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
-  return createMetadata({ title: 'Motorcycles', description: 'Motorcycles listed by the Pamir Ecotourism team for travel in Tajikistan.', path: '/motorcycles' });
+  return createMetadata({ title: 'Motorcycle Rental for the Pamir Highway', description: 'Rent a motorcycle in Tajikistan for the Pamir Highway and Wakhan valley. Bikes listed by the local Pamir Ecotourism team, daily rates and support on request.', path: '/motorcycles' });
 }
 
 export default async function MotorcyclesPage() {
