@@ -18,7 +18,7 @@ export function DestinationShowcase() {
         {destinationCards.map((place) => <Link key={place.slug} href={`/destinations/${place.slug}`} className={`group relative overflow-hidden rounded-2xl shadow-md ${place.className}`}>
           <Image src={place.image} alt={place.alt} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" aria-hidden="true" />
-          <div className="absolute inset-x-6 bottom-6 text-white"><p className="font-display text-[11px] font-bold uppercase tracking-widest text-[#95f8a7]">{place.kicker}</p><h3 className={`mt-1 font-display font-bold ${place.titleClass}`}>{place.title}</h3><p className="mt-1 line-clamp-2 text-sm leading-6 text-white/90">{place.text}</p></div>
+          <div className="absolute inset-x-6 bottom-6 text-white"><p className="font-display text-[11px] font-bold uppercase tracking-widest text-[#FFC98F]">{place.kicker}</p><h3 className={`mt-1 font-display font-bold ${place.titleClass}`}>{place.title}</h3><p className="mt-1 line-clamp-2 text-sm leading-6 text-white/90">{place.text}</p></div>
         </Link>)}
       </div>
     </div>

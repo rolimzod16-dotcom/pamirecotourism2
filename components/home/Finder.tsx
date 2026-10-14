@@ -59,11 +59,11 @@ export function Finder({ tours = catalogTours }: { tours?: HomeTour[] }) {
         <h1 id="hero-title" className="w-full max-w-4xl text-balance font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-[56px] lg:leading-[64px]">Unforgettable Expeditions Across the Roof of the World</h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-sand">Discover pristine alpine lakes, jagged peaks, and authentic Silk Road mountain hospitality in Tajikistan with local guides.</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-white/90 sm:gap-10">
-          <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Award size={20} className="text-[#95f8a7]" aria-hidden="true" />11+ Years Expeditions</span>
+          <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Award size={20} className="text-[#FFC98F]" aria-hidden="true" />11+ Years Expeditions</span>
           <span className="hidden h-1.5 w-1.5 rounded-full bg-white/30 sm:block" aria-hidden="true" />
           <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Star size={20} className="fill-saffron text-saffron" aria-hidden="true" />4.9/5 Explorer Rating</span>
           <span className="hidden h-1.5 w-1.5 rounded-full bg-white/30 sm:block" aria-hidden="true" />
-          <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Users size={20} className="text-[#95f8a7]" aria-hidden="true" />100% Community-Based</span>
+          <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Users size={20} className="text-[#FFC98F]" aria-hidden="true" />100% Community-Based</span>
         </div>
         <form onSubmit={search} className="mt-12 grid w-full max-w-5xl grid-cols-1 items-stretch gap-4 rounded-2xl bg-white/95 p-4 text-left shadow-2xl backdrop-blur-xl sm:p-6 md:grid-cols-2 lg:grid-cols-4">
           <label className="flex flex-col rounded-xl bg-mist p-3"><span className="inline-flex items-center gap-2 font-display text-[11px] font-bold uppercase tracking-wide text-pine"><Compass size={16} aria-hidden="true" />Region</span>

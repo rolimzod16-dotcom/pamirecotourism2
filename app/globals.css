@@ -4,6 +4,6 @@
 :root { color-scheme: light; }
 html { scroll-behavior: smooth; }
 body { @apply bg-paper text-ink font-body antialiased; }
-::selection { background: #0f5132; color: #ffffff; }
-:focus-visible { outline: 3px solid #0f5132; outline-offset: 3px; }
+::selection { background: #A22900; color: #ffffff; }
+:focus-visible { outline: 3px solid #A22900; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

@@ -64,7 +64,7 @@ export function BookingSection({ tours = catalogTours }: { tours?: TourChoice[] 
           <p className="mt-3 text-base leading-7 text-slate">Questions about altitude, GBAO permits, vehicle sharing, or weather windows? Message the team in Rushan directly.</p>
         </div>
         <a href="https://wa.me/992936001936" className="flex items-center gap-4 rounded-2xl bg-paper p-6 shadow-md">
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#92f5a4] text-leaf"><MessageCircle size={28} aria-hidden="true" /></span>
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#F6D8C9] text-forest"><MessageCircle size={28} aria-hidden="true" /></span>
           <span><span className="block font-display text-[11px] font-bold uppercase text-slate">Instant Field Desk</span><span className="block font-display text-xl font-bold text-pine">+992 93 600 1936</span><span className="block text-xs text-ink/70">Active 7 days a week via WhatsApp</span></span>
         </a>
         <ul className="flex flex-col gap-4 text-sm leading-6 text-ink">

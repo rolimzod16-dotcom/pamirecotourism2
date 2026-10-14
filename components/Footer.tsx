@@ -20,7 +20,7 @@ const places = [
 ] as const;
 
 function Mark() {
-  return <svg viewBox="0 0 48 48" className="h-9 w-9 shrink-0" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#0f5132" /><path d="M7 35 L17 16 L24 27 L31 12 L41 35 Z" fill="#F8F6F0" /><circle cx="35" cy="13" r="2.6" fill="#CA8A04" /></svg>;
+  return <svg viewBox="0 0 48 48" className="h-9 w-9 shrink-0" aria-hidden="true"><rect width="48" height="48" rx="12" fill="#A22900" /><path d="M7 35 L17 16 L24 27 L31 12 L41 35 Z" fill="#F8F6F0" /><circle cx="35" cy="13" r="2.6" fill="#CA8A04" /></svg>;
 }
 
 export function Footer() {
