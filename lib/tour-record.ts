@@ -56,7 +56,7 @@ export const tourSchema = z.object({
 }).strict();
 
 export type StoredTour = z.infer<typeof tourSchema>;
-export type HomeCard = CatalogTour & { priceAmount: string; priceCaption: string };
+export type HomeCard = CatalogTour & { priceAmount: string; priceCaption: string; priceUsd: number | null };
 
 const cyrillic: Record<string, string> = {
   а: 'a', б: 'b', в: 'v', г: 'g', ғ: 'gh', д: 'd', е: 'e', ё: 'yo', ж: 'zh', з: 'z', и: 'i', ӣ: 'i', й: 'y', к: 'k', қ: 'q', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ӯ: 'u', ф: 'f', х: 'kh', ҳ: 'h', ц: 'ts', ч: 'ch', ҷ: 'j', ш: 'sh', щ: 'shch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
@@ -80,8 +80,8 @@ export function uniqueSlug(base: string, taken: Iterable<string>) {
 }
 
 export function priceLabel(price: number | null) {
-  if (price === null) return { priceAmount: 'Custom Quote', priceCaption: 'Permit Dependent' };
-  return { priceAmount: `$${price.toLocaleString('en-US')}`, priceCaption: 'Per Person' };
+  if (price === null) return { priceAmount: 'Custom Quote', priceCaption: 'Permit Dependent', priceUsd: null };
+  return { priceAmount: `$${price.toLocaleString('en-US')}`, priceCaption: 'Per Person', priceUsd: price };
 }
 
 export function toPublicTour(tour: StoredTour): Tour {

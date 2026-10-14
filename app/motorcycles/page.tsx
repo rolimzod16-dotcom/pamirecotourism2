@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { SiteImage } from '@/components/SiteImage';
 import { MotorcycleCatalog } from '@/components/MotorcycleCatalog';
 import { createMetadata } from '@/lib/seo';
-import { motoPrice, motoSides } from '@/lib/moto-record';
+import { motoSides } from '@/lib/moto-record';
 import { listPublishedMotorcycles } from '@/lib/moto-store';
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +22,7 @@ export default async function MotorcyclesPage() {
       <div className="mx-auto max-w-content">
         <MotorcycleCatalog items={motorcycles.map((motorcycle) => {
           const sides = motoSides(motorcycle);
-          return { slug: motorcycle.slug, price: motoPrice(motorcycle.price), image: motorcycle.gallery[0]?.src ?? '', alt: motorcycle.gallery[0]?.alt ?? sides.en.title, en: { title: sides.en.title, blurb: sides.en.blurb }, ru: { title: sides.ru.title, blurb: sides.ru.blurb } };
+          return { slug: motorcycle.slug, price: motorcycle.price, image: motorcycle.gallery[0]?.src ?? '', alt: motorcycle.gallery[0]?.alt ?? sides.en.title, en: { title: sides.en.title, blurb: sides.en.blurb }, ru: { title: sides.ru.title, blurb: sides.ru.blurb } };
         })} />
       </div>
     </section>

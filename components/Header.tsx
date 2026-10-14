@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Menu, Phone, User, X, Compass } from 'lucide-react';
+import { Menu, Phone, User, X, Compass } from 'lucide-react';
 import { chrome } from '@/content/chrome';
 import { LogoMark } from '@/components/LogoMark';
+import { CurrencySwitcher } from '@/components/CurrencySwitcher';
 
 const c = chrome.header;
 const links = [
@@ -35,7 +36,7 @@ export function Header() {
         </nav>
         <div className="flex shrink-0 items-center gap-3 sm:gap-4">
           <a className="hidden items-center gap-1.5 whitespace-nowrap font-display text-[13px] font-semibold text-ink/70 transition-colors hover:text-pine 2xl:flex" href="tel:+992936001936"><Phone size={16} className="text-pine" aria-hidden="true" />+992 93 600 1936</a>
-          <span className="hidden items-center rounded-lg bg-mist px-2 py-1 font-display text-[11px] font-bold text-ink sm:flex"><span className="mr-1 text-slate">USD</span><ChevronDown size={14} aria-hidden="true" /></span>
+          <CurrencySwitcher className="flex" />
           <Link href="/#booking-form" className="inline-flex items-center gap-2 rounded-xl bg-forest px-2.5 py-2.5 font-display text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-leaf sm:px-5"><Compass size={18} aria-hidden="true" /><span className="hidden sm:inline">Book Expedition</span></Link>
           <Link href="/contact" aria-label="Contact the team" className="hidden h-8 w-8 items-center justify-center rounded-full bg-pine text-white sm:flex"><User size={16} aria-hidden="true" /></Link>
           <button type="button" aria-label={mobileOpen ? c.closeMenu : c.openMenu} aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => setMobileOpen(!mobileOpen)} className="rounded-lg p-2 text-pine xl:hidden">{mobileOpen ? <X /> : <Menu />}</button>

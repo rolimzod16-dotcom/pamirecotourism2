@@ -4,9 +4,10 @@ import { SiteImage as Image } from '@/components/SiteImage';
 import Link from 'next/link';
 import { Award, CalendarDays, Car, Compass, Footprints, House, MapPin, Mountain, Search, ShieldCheck, Star, Users, type LucideIcon } from 'lucide-react';
 import { catalogTours, tourPrice, type CatalogTour } from '@/content/expedition-home';
-type HomeTour = CatalogTour & { priceAmount?: string; priceCaption?: string };
+type HomeTour = CatalogTour & { priceAmount?: string; priceCaption?: string; priceUsd?: number | null };
 import { heroSlides } from '@/data/photos';
 import { useExpedition, type ExpeditionFilters } from './ExpeditionProvider';
+import { Money } from '@/components/Money';
 
 const levelClass: Record<CatalogTour['levelTone'], string> = {
   forest: 'bg-forest text-white',
@@ -98,7 +99,7 @@ export function Finder({ tours = catalogTours }: { tours?: HomeTour[] }) {
         </div>
         {shown.length === 0 ? <p className="rounded-2xl bg-white p-8 text-ink/70">No featured expedition matches that combination. <button type="button" className="font-semibold text-pine underline" onClick={() => { setRegion('all'); setActivity('all'); setSeason('may-oct'); setFilters({ region: 'all', activity: 'all', season: 'may-oct', tab: 'all' }); }}>Show all tours</button> or <Link href="/tours" className="font-semibold text-pine underline">browse the full list</Link>.</p> : <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {shown.map((tour) => {
-            const price = tour.priceAmount ? { amount: tour.priceAmount, caption: tour.priceCaption || 'Per Person' } : tourPrice(tour.slug);
+            const price = tour.priceAmount ? { amount: tour.priceAmount, caption: tour.priceCaption || 'Per Person', usd: tour.priceUsd ?? null } : tourPrice(tour.slug);
             return <article key={tour.slug} className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl">
               <div className="relative h-64 overflow-hidden">
                 <Image src={tour.image} alt={tour.imageAlt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -112,7 +113,7 @@ export function Finder({ tours = catalogTours }: { tours?: HomeTour[] }) {
                   <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/70">{tour.blurb}</p>
                 </div>
                 <div className="-mx-6 -mb-6 flex items-center justify-between bg-sand px-6 py-4">
-                  <div><p className="font-display text-[11px] font-medium uppercase tracking-wider text-slate">{price.caption}</p><p className="font-display text-2xl font-extrabold text-pine">{price.amount}</p></div>
+                  <div><p className="font-display text-[11px] font-medium uppercase tracking-wider text-slate">{price.caption}</p><p className="font-display text-2xl font-extrabold text-pine">{price.usd !== null ? <Money usd={price.usd} /> : price.amount}</p></div>
                   <button type="button" onClick={() => chooseTour(tour.slug)} className="rounded-xl bg-forest px-5 py-2.5 font-display text-[13px] font-semibold text-white transition-colors hover:bg-leaf">{price.amount === 'Custom Quote' ? 'Inquire Dates' : 'Book Expedition'}</button>
                 </div>
               </div>

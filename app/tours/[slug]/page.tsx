@@ -14,6 +14,7 @@ import { TourBooking } from '@/components/TourBooking';
 import { TourCard } from '@/components/TourCard';
 import { Reveal } from '@/components/Reveal';
 import { PhotoGrid } from '@/components/PhotoGrid';
+import { Money } from '@/components/Money';
 export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const stored = (await listPublished()).find((item) => item.slug === params.slug); if (!stored) return {};
@@ -25,11 +26,11 @@ export default async function TourDetail({ params }: { params: { slug: string } 
   const stored = published.find((item) => item.slug === params.slug); if (!stored) notFound();
   const tour = toPublicTour(stored);
   const photos = stored.gallery;
-  const facts = [
+  const facts: [string, React.ReactNode][] = [
     [c.tour.facts.days, tour.days === null ? c.common.placeholder : String(tour.days)],
     [c.tour.facts.distance, tour.distance ?? c.common.placeholder], [c.tour.facts.altitude, tour.maxAltitude ?? c.common.placeholder],
     [c.tour.facts.difficulty, tour.difficulty ?? c.common.placeholder], [c.tour.facts.season, tour.season ?? c.common.placeholder],
-    [c.tour.facts.group, tour.groupSize ?? c.common.placeholder], [c.tour.facts.price, typeof tour.price === 'number' ? `$${tour.price}` : c.tour.priceRequest],
+    [c.tour.facts.group, tour.groupSize ?? c.common.placeholder], [c.tour.facts.price, typeof tour.price === 'number' ? <Money usd={tour.price} /> : c.tour.priceRequest],
   ];
   const related = published.filter((item) => item.slug !== tour.slug && item.category === tour.category).slice(0, 3).map(toPublicTour);
   const url = `${siteUrl}/tours/${tour.slug}`;

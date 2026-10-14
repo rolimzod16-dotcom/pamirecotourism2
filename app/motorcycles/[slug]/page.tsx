@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { MotorcycleDetail } from '@/components/MotorcycleDetail';
 import { createMetadata } from '@/lib/seo';
-import { motoPrice, motoSides } from '@/lib/moto-record';
+import { motoSides } from '@/lib/moto-record';
 import { listPublishedMotorcycles } from '@/lib/moto-store';
 
 export const dynamic = 'force-dynamic';
@@ -19,6 +19,6 @@ export default async function MotorcyclePage({ params }: { params: { slug: strin
   if (!motorcycle) notFound();
   const sides = motoSides(motorcycle);
   return <main id="main-content" className="pb-16">
-    <MotorcycleDetail price={motoPrice(motorcycle.price)} photos={motorcycle.gallery} en={sides.en} ru={sides.ru} />
+    <MotorcycleDetail price={motorcycle.price} photos={motorcycle.gallery} en={sides.en} ru={sides.ru} />
   </main>;
 }

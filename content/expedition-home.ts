@@ -111,8 +111,8 @@ export const catalogTours: CatalogTour[] = [
 
 export function tourPrice(slug: string) {
   const tour = tours.find((item) => item.slug === slug);
-  if (!tour || tour.price === 'On request') return { amount: 'Custom Quote', caption: 'Permit Dependent' };
-  return { amount: `$${tour.price.toLocaleString('en-US')}`, caption: 'Per Person' };
+  if (!tour || tour.price === 'On request') return { amount: 'Custom Quote', caption: 'Permit Dependent', usd: null };
+  return { amount: `$${tour.price.toLocaleString('en-US')}`, caption: 'Per Person', usd: tour.price };
 }
 
 export const destinationCards = [

@@ -9,10 +9,13 @@ import { chrome } from '@/content/chrome';
 import { seo, createMetadata } from '@/lib/seo';
 import { site } from '@/data/site';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { CurrencyProvider } from '@/components/CurrencyProvider';
+import { getRates } from '@/lib/rates';
 const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 export const metadata: Metadata = createMetadata({ title: chrome.homeTitle, description: seo.description });
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const admin = (headers().get('x-pathname') ?? '').startsWith('/admin');
-  return <html lang="en"><body className={`${display.variable} ${inter.variable}`}><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'TravelAgency', name: seo.name, url: seo.url, telephone: site.phone, email: site.email, address: { '@type': 'PostalAddress', streetAddress: site.address, addressCountry: 'TJ' }, sameAs: seo.sameAs }).replace(/</g, '\\u003c') }} />{admin ? children : <><Header />{children}<Footer /><WhatsAppButton /></>}</body></html>;
+  const rates = await getRates();
+  return <html lang="en"><body className={`${display.variable} ${inter.variable}`}><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'TravelAgency', name: seo.name, url: seo.url, telephone: site.phone, email: site.email, address: { '@type': 'PostalAddress', streetAddress: site.address, addressCountry: 'TJ' }, sameAs: seo.sameAs }).replace(/</g, '\\u003c') }} /><CurrencyProvider rates={rates}>{admin ? children : <><Header />{children}<Footer /><WhatsAppButton /></>}</CurrencyProvider></body></html>;
 }

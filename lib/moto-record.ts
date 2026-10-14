@@ -64,6 +64,7 @@ export function motoSides(item: StoredMoto) {
   };
 }
 
+/** Admin-only label; the public site renders prices with <MotoPrice>. */
 export function motoPrice(price: number | null) {
   return price === null ? 'On request' : `$${price.toLocaleString('en-US')} / day`;
 }

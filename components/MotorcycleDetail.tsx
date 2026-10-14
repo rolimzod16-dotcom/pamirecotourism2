@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { SiteImage } from '@/components/SiteImage';
+import { MotoPrice } from '@/components/Money';
 
 type Side = { title: string; blurb: string; details: string };
 type Photo = { src: string; alt: string };
 
-export function MotorcycleDetail({ price, photos, en, ru }: { price: string; photos: Photo[]; en: Side; ru: Side }) {
+export function MotorcycleDetail({ price, photos, en, ru }: { price: number | null; photos: Photo[]; en: Side; ru: Side }) {
   const [lang, setLang] = useState<'en' | 'ru'>('en');
   const text = lang === 'ru' ? ru : en;
   const title = text.title || en.title || ru.title;
@@ -28,7 +29,7 @@ export function MotorcycleDetail({ price, photos, en, ru }: { price: string; pho
         </div>
         <Link href="/motorcycles" className="text-sm font-semibold text-gold">{ask.back}</Link>
         <h1 className="mt-3 font-display text-4xl sm:text-6xl">{title}</h1>
-        <p className="mt-4 text-lg text-gold">{price}</p>
+        <p className="mt-4 text-lg text-gold"><MotoPrice usd={price} /></p>
       </div>
     </section>
     <section className="mx-auto grid max-w-content gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1fr)_280px]">
