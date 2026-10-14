@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, Phone, User, X, Compass } from 'lucide-react';
 import { chrome } from '@/content/chrome';
-import { LogoMark } from '@/components/LogoMark';
+import Image from 'next/image';
 import { CurrencySwitcher } from '@/components/CurrencySwitcher';
 
 const c = chrome.header;
@@ -28,8 +28,7 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50 bg-paper/90 shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-12">
         <Link href="/" aria-label={c.home} className="flex shrink-0 items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <LogoMark className="h-10 w-10" />
-          <span className="flex flex-col"><span className="font-display text-base font-semibold leading-none tracking-tight text-pine sm:text-lg xl:text-xl">Pamir Ecotourism</span><span className="mt-0.5 hidden font-display text-[11px] font-bold uppercase tracking-wider text-slate 2xl:block">Tajikistan Expeditions</span></span>
+          <Image src="/logo.png" alt="Pamir Ecotourism — Tajikistan Expeditions" width={910} height={192} priority className="h-9 w-auto sm:h-12" />
         </Link>
         <nav aria-label={c.mainNav} className="hidden items-center gap-5 xl:flex">
           {links.map((item) => <Link key={item.href} href={item.href} aria-current={active(item.href) ? 'page' : undefined} className={`whitespace-nowrap py-1 font-display text-sm font-semibold transition-colors ${active(item.href) ? 'relative text-pine after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-pine' : 'text-ink/70 hover:text-ink'}`}>{item.label}</Link>)}
