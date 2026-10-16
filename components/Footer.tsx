@@ -25,7 +25,7 @@ export function Footer() {
   return <footer className="bg-mist text-ink"><div className="mx-auto max-w-7xl px-6 pb-8 pt-20 lg:px-12">
     <div className="grid grid-cols-1 gap-x-8 gap-y-12 border-b border-pine/10 pb-14 md:grid-cols-2 lg:grid-cols-12">
       <div className="flex flex-col gap-4 lg:col-span-4">
-        <Link href="/" className="flex items-center gap-3"><Image src="/logo.png" alt="Pamir Ecotourism — Tajikistan Expeditions" width={910} height={192} className="h-14 w-auto" /></Link>
+        <Link href="/" className="flex items-center gap-3"><Image src="/logo-mark.png" alt="" width={512} height={512} className="h-20 w-20" /><span className="flex flex-col leading-none"><span className="font-display text-xl font-bold text-ink">Pamir Ecotourism</span><span className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate">Tajikistan Expeditions</span></span></Link>
         <p className="max-w-sm text-sm leading-6 text-ink/70">Authentic, sustainable eco-expeditions across the Roof of the World, the Pamir Mountains, and Tajikistan. Dedicated to conservation and community-based travel.</p>
         <p className="flex items-center gap-2 text-xs text-slate"><Leaf size={16} className="text-leaf" aria-hidden="true" />Community-based operator · Est. 2015</p>
         <div className="flex items-center gap-3 pt-2">
