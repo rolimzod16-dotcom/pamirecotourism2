@@ -11,11 +11,11 @@ const errors: Record<string, string> = {
 };
 
 export default async function TelegramPage({ searchParams }: { searchParams: { connected?: string; cleared?: string; error?: string } }) {
-  const { token, password, siteUrl } = telegramConfig();
+  const { token, password, webhookUrl } = telegramConfig();
   const chats = await readChatIds();
   const bot = token ? await telegramApi<{ username?: string }>('getMe').catch(() => null) : null;
   const hook = token ? await telegramApi<{ url?: string; last_error_message?: string }>('getWebhookInfo').catch(() => null) : null;
-  const hookReady = hook?.url === `${siteUrl}/api/telegram`;
+  const hookReady = hook?.url === webhookUrl;
   const row = (label: string, ok: boolean, value: React.ReactNode) => <li className="flex flex-wrap justify-between gap-2 border-b border-pine/10 py-3 last:border-0"><span>{label}</span><span className={ok ? 'font-semibold text-green-800' : 'font-semibold text-red-800'}>{value}</span></li>;
   return <div className="max-w-2xl">
     <h1 className="font-display text-3xl font-bold">Telegram-бот</h1>

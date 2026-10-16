@@ -13,10 +13,10 @@ async function requireAdmin() {
 
 export async function connectWebhookAction() {
   await requireAdmin();
-  const { token, password, siteUrl } = telegramConfig();
+  const { token, password, webhookUrl } = telegramConfig();
   if (!token || !password || !webhookSecret()) redirect('/admin/telegram?error=config');
   try {
-    await telegramApi('setWebhook', { url: `${siteUrl}/api/telegram`, secret_token: webhookSecret(), allowed_updates: ['message'], drop_pending_updates: true });
+    await telegramApi('setWebhook', { url: webhookUrl, secret_token: webhookSecret(), allowed_updates: ['message'], drop_pending_updates: true });
   } catch { redirect('/admin/telegram?error=webhook'); }
   redirect('/admin/telegram?connected=1');
 }

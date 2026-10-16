@@ -17,6 +17,8 @@ export function telegramConfig() {
     token: process.env.TELEGRAM_BOT_TOKEN?.trim() || '',
     password: process.env.TELEGRAM_BOT_PASSWORD || '',
     siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || 'https://pamirecotourism.com').replace(/\/$/, ''),
+    // Telegram calls the Vercel alias, so the bot keeps working when the custom domain's DNS is down.
+    webhookUrl: `${(process.env.TELEGRAM_WEBHOOK_BASE || 'https://pamirecotourism2-55tg.vercel.app').replace(/\/$/, '')}/api/telegram`,
   };
 }
 
