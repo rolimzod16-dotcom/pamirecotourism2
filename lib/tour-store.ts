@@ -34,13 +34,13 @@ function enqueue<T>(job: () => Promise<T>) {
   return run;
 }
 
-async function readBlobJson(pathname: string) {
+export async function readBlobJson(pathname: string) {
   const result = await get(pathname, { access: 'private', useCache: false });
   if (!result || result.statusCode !== 200 || !result.stream) return null;
   return JSON.parse(await new Response(result.stream).text()) as unknown;
 }
 
-async function writeBlobJson(pathname: string, value: unknown) {
+export async function writeBlobJson(pathname: string, value: unknown) {
   await put(pathname, JSON.stringify(value), {
     access: 'private',
     addRandomSuffix: false,

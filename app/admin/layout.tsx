@@ -15,6 +15,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin">Туры</Link>
           <Link href="/admin/motorcycles">Мото</Link>
           <Link href="/admin/inquiries">Заявки</Link>
+          <Link href="/admin/telegram">Telegram</Link>
           <Link href="/" target="_blank">Открыть сайт</Link>
           <form action={logoutAction}><button type="submit" className="rounded-lg border border-white/40 px-3 py-1.5">Выйти</button></form>
         </nav>

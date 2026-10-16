@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { allowRequest, readJson } from '@/lib/request-guard';
 import { saveInquiry } from '@/lib/tour-store';
+import { line, notifyTelegram } from '@/lib/telegram';
 
 const schema = z.object({ email: z.string().trim().email().max(254), website: z.string().max(200).optional() }).strict();
 export async function POST(request: Request) {
@@ -11,6 +12,7 @@ export async function POST(request: Request) {
     const parsed = schema.safeParse(await readJson(request));
     if (!parsed.success) return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     if (parsed.data.website) return NextResponse.json({ ok: true, stored: false });
+    await notifyTelegram(['<b>Новая подписка на рассылку</b>', '', line('Почта', parsed.data.email)]);
     const stored = await saveInquiry({
       id: randomUUID(), at: new Date().toISOString(), kind: 'newsletter', name: '', email: parsed.data.email, phone: '', tour: '', date: '', groupSize: null, message: '',
     }).catch(() => false);

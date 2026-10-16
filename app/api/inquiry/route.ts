@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import { destinations } from '@/data/destinations';
 import { allowRequest, readJson, safeText } from '@/lib/request-guard';
 import { listPublished, saveInquiry } from '@/lib/tour-store';
+import { line, notifyTelegram, telegramConfig } from '@/lib/telegram';
 
 const detailsSchema = (slugs: string[]) => z.object({
   activity: z.string().refine((slug) => slug === 'custom' || slugs.includes(slug)),
@@ -28,9 +29,22 @@ export async function POST(request: Request) {
     const payload = inquirySchema.safeParse(await readJson(request));
     if (!payload.success) return NextResponse.json({ error: 'Invalid inquiry' }, { status: 400 });
     if (payload.data.website) return NextResponse.json({ ok: true, stored: false });
-    const slugs = (await listPublished()).map((tour) => tour.slug);
-    const details = detailsSchema(slugs).safeParse(JSON.parse(payload.data.message));
+    const tours = await listPublished();
+    const details = detailsSchema(tours.map((tour) => tour.slug)).safeParse(JSON.parse(payload.data.message));
     if (!details.success) return NextResponse.json({ error: 'Invalid trip details' }, { status: 400 });
+    const trip = details.data;
+    const fields = [
+      line('Имя', payload.data.name),
+      line('Почта', payload.data.email),
+      line('Телефон', trip.phone),
+      line('Связаться через', trip.contactMethod),
+      line('Тур', trip.activity === 'custom' ? 'Индивидуальный маршрут' : tours.find((tour) => tour.slug === trip.activity)?.title ?? trip.activity),
+      line('Направление', destinations.find((place) => place.slug === trip.destination)?.name),
+      line('Даты', `${trip.preferredDate}${trip.flexible ? ' (гибко)' : ''}`),
+      line('Человек', trip.groupSize),
+      line('Пожелания', trip.specialRequest),
+    ].filter(Boolean);
+    await notifyTelegram(['<b>Новая заявка на тур</b>', '', ...fields, '', `Админка: ${telegramConfig().siteUrl}/admin/inquiries`]);
     const stored = await saveInquiry({
       id: randomUUID(),
       at: new Date().toISOString(),

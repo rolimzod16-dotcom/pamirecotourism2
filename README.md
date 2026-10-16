@@ -57,6 +57,10 @@ The `find-placeholders` command prints file and line numbers. Markers also appea
 
 The form submits `name`, `email`, `website` (honeypot), and a JSON string in `message` to `POST /api/inquiry`. The newsletter sends `email` and a honeypot field to `POST /api/newsletter`. Both endpoints validate input with zod, avoid logging private values, limit request size and return demo responses. They allow five requests per IP and endpoint per minute in memory. This limit resets on restart, is separate on each serverless instance, and depends on proxy headers; use a shared, trusted rate limiter and operational monitoring before enabling delivery. Update the user-facing success messages when real delivery works.
 
+### Telegram notifications
+
+Every trip inquiry and newsletter sign-up is also sent to a Telegram bot (`lib/telegram.ts`). Set `TELEGRAM_BOT_TOKEN` (from @BotFather) and `TELEGRAM_BOT_PASSWORD` on Vercel, deploy, then press «Подключить бота» on `/admin/telegram`. That registers the webhook `POST /api/telegram`, which only accepts calls carrying a secret derived from `AUTH_SECRET`. The bot answers only in private chats and sends inquiries only to chats that sent the password. It deletes the password message, locks a chat for 15 minutes after five wrong tries, and `/stop` unsubscribes. Authorized chat ids are stored in Blob at `telegram/chats.json`.
+
 For example, install `resend` and replace the inquiry stub's success path **after** validation:
 
 ```ts
