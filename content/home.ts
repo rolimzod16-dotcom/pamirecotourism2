@@ -58,7 +58,7 @@ export const home = {
   },
   gallery: { items: homeGlimpse, eyebrow: 'THE VIEW', title: 'Glimpses of the Pamirs', intro: 'Photographs from the lakes, roads and valleys on our journeys.', full: 'View full gallery', open: 'Open image', close: 'Close gallery image', previous: 'Previous image', next: 'Next image', counter: 'Image' },
   inquiry: {
-    eyebrow: 'START A CONVERSATION', title: "Tell us your dream route. We'll shape the trip.", reply: '[Reply within 24 hours — to confirm with the team.]',
+    eyebrow: 'START A CONVERSATION', title: "Tell us your dream route. We'll shape the trip.", reply: 'The local team in Rushan replies to every inquiry personally.',
     steps: ['Trip', 'Details', 'Contact'], next: 'Continue', back: 'Back', submit: 'Send inquiry', sending: 'Sending…',
     activity: 'Activity or tour', activityPrompt: 'Choose a tour', destination: 'Destination (optional)', destinationPrompt: 'Choose a destination', special: 'Special request (optional)', specialPrompt: 'Tell us what matters to you',
     date: 'Preferred date or month', datePrompt: 'For example, June 2027', group: 'Group size', flexibility: 'My dates are flexible',
