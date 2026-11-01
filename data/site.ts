@@ -6,3 +6,8 @@ export const site = {
   email: 'info@pamirecotourism.com',
   locale: 'en',
 } as const;
+
+export const partners = [
+  { name: 'Pamir Moto Adventure', href: 'https://pamirmoto.com/en', text: 'Motorcycle and 4x4 rental in Tajikistan, plus guided rides on the Pamir Highway.' },
+  { name: 'Great Silk Trails', href: 'https://www.greatsilktrails.com/', text: 'Small-group and private Silk Road journeys with local guides and family hosts.' },
+] as const;

@@ -7,6 +7,7 @@ import { Reveal } from '@/components/Reveal';
 import { pages } from '@/content/pages';
 import { heroSlides } from '@/data/photos';
 import { createMetadata } from '@/lib/seo';
+import { partners } from '@/data/site';
 const c = pages.about;
 const icons = { map: MapPin, shield: ShieldCheck, users: Users, leaf: Leaf };
 export const metadata: Metadata = createMetadata({ title: 'About Us — Local Pamir Tour Operator from Rushan', description: 'Pamir Ecotourism is a local tour operator from Rushan, GBAO: 4x4 routes, treks and homestays planned by people who live in the Pamirs.', path: '/about' });
@@ -17,6 +18,7 @@ export default function AboutPage() {
     <section className="bg-navy px-5 py-20 text-white sm:px-8"><Reveal className="mx-auto max-w-content"><h2 className="font-display text-4xl">{c.responsibleTitle}</h2><ul className="mt-7 grid list-disc gap-5 pl-5 leading-7 text-white/80 md:grid-cols-3">{c.responsible.map((item) => <li key={item}>{item}</li>)}</ul></Reveal></section>
     <TeamGrid expanded />
     {c.credentials.length > 0 && <section className="bg-snow px-5 py-16 sm:px-8"><Reveal className="mx-auto max-w-content"><h2 className="font-display text-3xl">{c.credentialsTitle}</h2><div className="mt-6 flex flex-wrap gap-3">{c.credentials.map((item) => <span key={item} className="rounded-brand border border-navy/20 bg-white px-5 py-4 text-sm font-semibold">{item}</span>)}</div></Reveal></section>}
+    <section className="px-5 pt-16 sm:px-8"><Reveal className="mx-auto max-w-content"><h2 className="font-display text-3xl">Our partners</h2><p className="mt-3 max-w-2xl leading-7 text-navy/75">Riding the Pamirs or travelling further along the Silk Road? These local teams cover the rest of the journey.</p><div className="mt-6 grid gap-4 md:grid-cols-2">{partners.map((partner) => <a key={partner.href} href={partner.href} target="_blank" rel="noopener" className="block rounded-brand bg-white p-6 shadow-soft"><span className="font-display text-2xl">{partner.name}</span><span className="mt-2 block text-sm leading-7 text-navy/75">{partner.text}</span></a>)}</div></Reveal></section>
     <aside className="px-5 py-16 sm:px-8"><div className="mx-auto flex max-w-content flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><h2 className="font-display text-3xl">{c.ctaTitle}</h2><Link href="/contact" className="inline-flex w-fit items-center gap-2 rounded-brand bg-gold px-5 py-3 font-bold text-navy">{c.ctaButton}<ArrowUpRight size={18} aria-hidden="true" /></Link></div></aside>
   </main>;
 }

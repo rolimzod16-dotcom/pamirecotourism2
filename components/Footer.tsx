@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Camera, Leaf, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { NewsletterForm } from './NewsletterForm';
-import { site } from '@/data/site';
+import { partners, site } from '@/data/site';
 import Image from 'next/image';
 
 const expeditions = [
@@ -46,6 +46,7 @@ export function Footer() {
         <NewsletterForm />
       </div>
     </div>
+    <div className="border-b border-pine/10 py-8"><h2 className="font-display text-lg font-semibold">Our Partners</h2><ul className="grid gap-4 pt-3 md:grid-cols-2">{partners.map((partner) => <li key={partner.href} className="text-sm text-ink/70"><a href={partner.href} target="_blank" rel="noopener" className="font-semibold text-ink transition-colors hover:text-pine">{partner.name}</a><p className="mt-1">{partner.text}</p></li>)}</ul></div>
     <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-slate sm:flex-row">
       <span>© {new Date().getFullYear()} Pamir Ecotourism. All rights reserved.</span>
       <span className="inline-flex items-center gap-1.5 font-display text-[11px] font-bold text-leaf"><Leaf size={14} aria-hidden="true" />Community-based expeditions</span>
