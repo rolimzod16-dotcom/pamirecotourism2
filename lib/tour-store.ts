@@ -1,9 +1,12 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { get, list, put } from '@vercel/blob';
-import { parseTourList, seedTours, type StoredTour } from '@/lib/tour-record';
+import { applyOperatorTours, parseTourList, seedTours, type StoredTour } from '@/lib/tour-record';
+import { OPERATOR_TOURS_VERSION } from '@/data/operator-tours';
 
 const catalogPath = 'catalog/tours.json';
+const migrationsPath = 'catalog/migrations.json';
+const localMigrations = path.join(process.cwd(), '.data', 'migrations.json');
 const localDir = path.join(process.cwd(), '.data');
 const localCatalog = path.join(localDir, 'tours.json');
 const localInquiries = path.join(localDir, 'inquiries.json');
@@ -84,8 +87,47 @@ async function writeCatalog(tours: StoredTour[]) {
   await writeBlobJson(catalogPath, clean);
 }
 
+async function readMigrations(): Promise<string[] | null> {
+  try {
+    const value = storageMode() === 'local'
+      ? JSON.parse(await fs.readFile(localMigrations, 'utf8')) as unknown
+      : await readBlobJson(migrationsPath);
+    return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+  } catch (error) {
+    const missing = error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT';
+    return missing ? [] : null;
+  }
+}
+
+async function writeMigrations(done: string[]) {
+  if (storageMode() === 'local') {
+    await fs.mkdir(localDir, { recursive: true });
+    await fs.writeFile(localMigrations, JSON.stringify(done), 'utf8');
+    return;
+  }
+  await writeBlobJson(migrationsPath, done);
+}
+
+/** Writes the operator's tour programmes into an existing catalog once, so later admin edits are kept. */
+async function migrateCatalog(stored: StoredTour[]): Promise<StoredTour[]> {
+  if (storageMode() === 'off') return stored;
+  const done = await readMigrations();
+  if (done === null || done.includes(OPERATOR_TOURS_VERSION)) return stored;
+  const next = applyOperatorTours(stored);
+  try {
+    await enqueue(async () => {
+      await writeCatalog(next);
+      await writeMigrations([...done, OPERATOR_TOURS_VERSION]);
+    });
+  } catch (error) {
+    console.error('Tour catalog migration failed', error instanceof Error ? error.message : 'error');
+  }
+  return next;
+}
+
 export async function listTours() {
-  const stored = await readCatalog();
+  const read = await readCatalog();
+  const stored = Array.isArray(read) ? await migrateCatalog(read) : read;
   if (Array.isArray(stored)) return [...stored].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title));
   const seed = seedTours();
   if (stored === 'missing' && storageMode() !== 'off') {

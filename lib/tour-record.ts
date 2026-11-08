@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { catalogTours, type CatalogTour } from '@/content/expedition-home';
 import { tours, type Tour } from '@/data/tours';
+import { operatorTours } from '@/data/operator-tours';
 import { heroSlides, tourPhotos } from '@/data/photos';
 import { isPlaceholder, real, realList } from '@/lib/placeholder';
 
@@ -151,6 +152,10 @@ const regionFor = (destinations: string[]) => {
 };
 
 export function seedTours(): StoredTour[] {
+  return applyOperatorTours(baseSeed());
+}
+
+function baseSeed(): StoredTour[] {
   const cards = new Map(catalogTours.map((card, index) => [card.slug, { card, index }]));
   return [...tours].sort((a, b) => (cards.get(a.slug)?.index ?? 100) - (cards.get(b.slug)?.index ?? 100)).map((tour, sort) => {
     const card = cards.get(tour.slug)?.card;
@@ -194,6 +199,38 @@ export function seedTours(): StoredTour[] {
       destinations: tour.destinations,
     });
   });
+}
+
+const uploaded = (src: string) => src.startsWith('/api/media') || src.startsWith('https://');
+
+/**
+ * Puts the operator's real programmes into a catalog. A tour with the same slug is rewritten in place
+ * (keeping its order, visibility, rating, any uploaded photos and, when the programme has no price, the old price);
+ * a new programme is appended. Running it twice changes nothing.
+ */
+export function applyOperatorTours(list: StoredTour[]): StoredTour[] {
+  const result = [...list];
+  let nextSort = result.reduce((max, tour) => Math.max(max, tour.sort), -1) + 1;
+  for (const source of operatorTours) {
+    const index = result.findIndex((tour) => tour.slug === source.slug);
+    const current = index >= 0 ? result[index] : null;
+    const keepPhotos = current && current.gallery.some((photo) => uploaded(photo.src));
+    const gallery = keepPhotos ? current.gallery : source.gallery;
+    const next = tourSchema.parse({
+      ...source,
+      price: source.price ?? current?.price ?? null,
+      gallery,
+      image: gallery[0]?.src ?? '',
+      imageAlt: gallery[0]?.alt ?? source.title,
+      rating: current?.rating ?? '',
+      showOnHome: current?.showOnHome ?? true,
+      published: current?.published ?? true,
+      sort: current?.sort ?? nextSort++,
+    });
+    if (index >= 0) result[index] = next;
+    else result.push(next);
+  }
+  return result;
 }
 
 export function blankTour(sort: number): StoredTour {
