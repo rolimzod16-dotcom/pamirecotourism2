@@ -19,7 +19,7 @@ export const home = {
     eyebrow: 'THE JOURNEYS', title: 'Signature journeys',
     intro: 'Find your way through mountain passes, remote valleys and the places in between. Ask our team for current routes and availability.',
     all: 'See all tours', view: 'View journey', from: 'From', request: 'On request',
-    daysUnknown: 'Days: to confirm', difficultyUnknown: 'Difficulty: to confirm', groupUnknown: 'Group: to confirm',
+    daysUnknown: 'Flexible length', difficultyUnknown: 'Difficulty on request', groupUnknown: 'Any group size',
   },
   map: {
     eyebrow: 'EXPLORE THE REGION', title: 'A landscape worth getting to know.',

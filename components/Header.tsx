@@ -27,14 +27,14 @@ export function Header() {
   return <><a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-xl focus:bg-white focus:px-3 focus:py-2 focus:text-pine">{c.skip}</a>
     <header className="fixed inset-x-0 top-0 z-50 bg-paper/90 shadow-[0_1px_8px_rgba(0,0,0,0.04)] backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-12">
-        <Link href="/" aria-label={c.home} className="flex shrink-0 items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <Image src="/logo-mark.png" alt="" width={512} height={512} priority className="h-12 w-12 sm:h-14 sm:w-14" />
-          <span className="flex flex-col leading-none"><span className="font-display text-base font-bold text-ink sm:text-lg">Pamir Ecotourism</span><span className="mt-1 hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-slate sm:block">Tajikistan Expeditions</span></span>
+        <Link href="/" aria-label={c.home} className="flex min-w-0 items-center gap-2 sm:gap-3" onClick={() => setMobileOpen(false)}>
+          <Image src="/logo-mark.png" alt="" width={512} height={512} priority className="h-10 w-10 shrink-0 sm:h-14 sm:w-14" />
+          <span className="flex min-w-0 flex-col leading-none"><span className="truncate font-display text-[15px] font-bold text-ink sm:text-lg">Pamir Ecotourism</span><span className="mt-1 hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-slate sm:block">Tajikistan Expeditions</span></span>
         </Link>
         <nav aria-label={c.mainNav} className="hidden items-center gap-5 xl:flex">
           {links.map((item) => <Link key={item.href} href={item.href} aria-current={active(item.href) ? 'page' : undefined} className={`whitespace-nowrap py-1 font-display text-sm font-semibold transition-colors ${active(item.href) ? 'relative text-pine after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-pine' : 'text-ink/70 hover:text-ink'}`}>{item.label}</Link>)}
         </nav>
-        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-4">
           <a className="hidden items-center gap-1.5 whitespace-nowrap font-display text-[13px] font-semibold text-ink/70 transition-colors hover:text-pine 2xl:flex" href="tel:+992936001936"><Phone size={16} className="text-pine" aria-hidden="true" />+992 93 600 1936</a>
           <CurrencySwitcher className="flex" />
           <Link href="/#booking-form" className="inline-flex items-center gap-2 rounded-xl bg-forest px-2.5 py-2.5 font-display text-[13px] font-semibold text-white shadow-sm transition-colors hover:bg-leaf sm:px-5"><Compass size={18} aria-hidden="true" /><span className="hidden sm:inline">Book Expedition</span></Link>
