@@ -4,7 +4,25 @@ import type { StoredTour } from '@/lib/tour-record';
 
 export type OperatorTour = Omit<StoredTour, 'sort' | 'showOnHome' | 'published' | 'rating' | 'image' | 'imageAlt'>;
 
-export const OPERATOR_TOURS_VERSION = 'operator-tours-2025-11';
+/** Each release is written into the live catalog once; later admin edits are kept. */
+export const OPERATOR_TOUR_RELEASES: { version: string; slugs: string[] }[] = [
+  {
+    "version": "operator-tours-2025-11",
+    "slugs": [
+      "pamir-classical-4x4",
+      "mountain-lakes-trekking",
+      "pamir-lakes-traverse",
+      "pamir-walks-cultural",
+      "snow-leopard-tour"
+    ]
+  },
+  {
+    "version": "operator-tours-2026-11-ride",
+    "slugs": [
+      "high-pamirs-motorcycle"
+    ]
+  }
+];
 
 export const operatorTours: OperatorTour[] = [
   {
@@ -880,6 +898,185 @@ export const operatorTours: OperatorTour[] = [
     ],
     "destinations": [
       "hissor",
+      "bartang"
+    ]
+  },
+  {
+    "slug": "high-pamirs-motorcycle",
+    "title": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition",
+    "category": "driving",
+    "price": null,
+    "days": 14,
+    "distance": "about 2,000 km",
+    "maxAltitude": "4,655 m (Ak-Baital Pass)",
+    "difficulty": "Advanced / expedition · Grade 4/5",
+    "season": "May – September (conditions permitting)",
+    "groupSize": "Small group or private",
+    "hook": "A 14-day motorcycle expedition with our partner Pamir Moto Adventure: Wakhi villages and Silk Road forts, the Eastern Pamir plateau, Karakul and the raw tracks of the Bartang Valley.",
+    "overview": "The definitive Pamir adventure for riders who want more than a highway tour. From warm Wakhi villages and ancient Silk Road landmarks to the austere Eastern Pamir plateau and the raw tracks of the Bartang Valley, the journey builds steadily from Dushanbe into the high country, then leaves the familiar road for some of Tajikistan's most memorable remote riding. The motorcycles, ride leader and mechanic come from our partner Pamir Moto Adventure (pamirmoto.com), a Tajik motorcycle and 4x4 rental team with Honda CRF300L dual-sport bikes; Pamir Ecotourism looks after the homestays, permits and local logistics. Route: Dushanbe – Wakhan – Murghab – Karakul – Bartang – Dushanbe.",
+    "blurb": "A 14-day motorcycle expedition with our partner Pamir Moto Adventure: Wakhi villages and Silk Road forts, the Eastern Pamir plateau, Karakul and the raw tracks of the Bartang Valley.",
+    "route": "Dushanbe · Wakhan · Murghab · Karakul · Bartang",
+    "badge": "14 days · Motorcycle expedition",
+    "level": "Strenuous",
+    "levelTone": "alert",
+    "gallery": [
+      {
+        "src": "/photos/tours/high-pamirs-motorcycle/01.jpg",
+        "alt": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition, photograph 1"
+      },
+      {
+        "src": "/photos/tours/high-pamirs-motorcycle/02.jpg",
+        "alt": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition, photograph 2"
+      },
+      {
+        "src": "/photos/tours/high-pamirs-motorcycle/03.jpg",
+        "alt": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition, photograph 3"
+      },
+      {
+        "src": "/photos/tours/high-pamirs-motorcycle/04.jpg",
+        "alt": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition, photograph 4"
+      },
+      {
+        "src": "/photos/tours/high-pamirs-motorcycle/05.jpg",
+        "alt": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition, photograph 5"
+      },
+      {
+        "src": "/photos/tours/high-pamirs-motorcycle/06.jpg",
+        "alt": "Ride the Roof of the World: Pamir & Bartang Motorcycle Expedition, photograph 6"
+      }
+    ],
+    "regions": [
+      "pamir-highway",
+      "wakhan",
+      "sarez"
+    ],
+    "activities": [
+      "4x4"
+    ],
+    "winter": false,
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival in Dushanbe",
+        "description": "No riding. Meet the expedition crew, review documents, fit riding equipment, allocate motorcycles and brief on road conditions, altitude and safety.",
+        "overnight": "Dushanbe hotel"
+      },
+      {
+        "day": 2,
+        "title": "Dushanbe – Qala-i Husayn · about 205 km",
+        "description": "Collect the motorcycles and head for the eastern foothills. The road tightens into rugged valleys; a stop by a mountain lake may be possible.",
+        "overnight": "Local guesthouse / homestay"
+      },
+      {
+        "day": 3,
+        "title": "Qala-i Husayn – Qalai-Khumb · 85–120 km",
+        "description": "The Khaburabot crossing, when open: sweeping views and rough, exposed mountain tracks into Gorno-Badakhshan and down to the Panj. If the pass is closed, the team uses the longer southern road.",
+        "overnight": "Qalai-Khumb guesthouse"
+      },
+      {
+        "day": 4,
+        "title": "Qalai-Khumb – Khorog · 240–250 km",
+        "description": "The twisting Panj canyon with Afghanistan across the water, landslide-scarred slopes, small villages and changing road surfaces.",
+        "overnight": "Khorog hotel / guesthouse"
+      },
+      {
+        "day": 5,
+        "title": "Khorog – Ishkashim – Yamchun · 200–220 km",
+        "description": "Into the Wakhan Valley beneath the Hindu Kush. Yamchun Fortress and, time permitting, the warm waters of Bibi Fatima, then a Wakhi family homestay.",
+        "overnight": "Yamchun homestay"
+      },
+      {
+        "day": 6,
+        "title": "Yamchun – Langar · 40–80 km",
+        "description": "A short stage for Wakhan history: traditional villages, shrines, museums or petroglyphs where accessible.",
+        "overnight": "Langar homestay"
+      },
+      {
+        "day": 7,
+        "title": "Langar – Khargush – Jartegumbaz · about 150 km",
+        "description": "Wide valleys, exposed passes and high-altitude tracks towards the Zorkul area, subject to reserve permissions and a passable route. Remote hot springs.",
+        "overnight": "Basic highland shelter / hunting camp"
+      },
+      {
+        "day": 8,
+        "title": "Jartegumbaz – Murghab · 100–165 km",
+        "description": "Across the stark Aksu wilderness: sand, gravel, yak herds and Kyrgyz summer pastures, to the high-plateau town of Murghab.",
+        "overnight": "Murghab guesthouse"
+      },
+      {
+        "day": 9,
+        "title": "Murghab – Ak-Baital Pass – Karakul · about 135 km",
+        "description": "North on the M41 over Ak-Baital (about 4,655 m) and down to the deep-blue Lake Karakul at a calm, measured pace.",
+        "overnight": "Karakul homestay"
+      },
+      {
+        "day": 10,
+        "title": "Karakul – Jalang · about 80 km",
+        "description": "Off the main road into open wilderness: loose gravel, rugged tracks and possible stream crossings.",
+        "overnight": "Basic yurt / local shelter"
+      },
+      {
+        "day": 11,
+        "title": "Jalang – Kök-Jar – Savnob · 70–90 km",
+        "description": "The defining technical stage: the rocky Kök-Jar descent into the Bartang gorge, only if local reconnaissance confirms it is safe. Finish in the green oasis of Savnob.",
+        "overnight": "Savnob homestay"
+      },
+      {
+        "day": 12,
+        "title": "Savnob – Rushan · 135–150 km",
+        "description": "West along the Bartang past vertical rock walls, river crossings and small villages; slow and technical in places.",
+        "overnight": "Rushan guesthouse / homestay"
+      },
+      {
+        "day": 13,
+        "title": "Rushan – Qalai-Khumb · 175–190 km",
+        "description": "Back along the Panj: breathing space after the Bartang days, though roadworks, traffic and weather can slow progress.",
+        "overnight": "Qalai-Khumb homestay"
+      },
+      {
+        "day": 14,
+        "title": "Qalai-Khumb – Dushanbe · 320–370 km",
+        "description": "Normally via the southern Kulob road. Return the motorcycles, debrief and celebrate. Book departure flights after the tour.",
+        "overnight": "Tour ends in Dushanbe"
+      }
+    ],
+    "included": [
+      "Honda CRF300L-class dual-sport motorcycle from Pamir Moto Adventure",
+      "Qualified ride leader",
+      "Mechanic and support 4x4",
+      "Hotels, Pamiri homestays and one highland shelter",
+      "GBAO permit assistance"
+    ],
+    "excluded": [
+      "International flights",
+      "Travel and medical insurance",
+      "Fuel, meals and transfers unless stated in your quotation",
+      "Zorkul reserve entry, arranged separately"
+    ],
+    "gear": [],
+    "faq": [
+      {
+        "question": "How much does this tour cost?",
+        "answer": "Personalised quotation after your dates and group size are known: motorcycles, leader, support, accommodation, permits, fuel, meals and deposits are listed in writing. The final quote depends on your dates and group size."
+      },
+      {
+        "question": "Who is this trip for?",
+        "answer": "For confident off-road riders who want both Silk Road culture and a serious high-altitude challenge. The upper Bartang / Kök-Jar passage is a genuine expedition segment, not a guaranteed all-weather road; the leader can reroute via Murghab, Ghund and Khorog if it is closed. Flexible dates, reliable communications and an emergency plan are essential."
+      },
+      {
+        "question": "Where do we stay?",
+        "answer": "Hotels, Pamiri homestays and one basic highland shelter."
+      },
+      {
+        "question": "Who provides the motorcycles?",
+        "answer": "Our partner Pamir Moto Adventure (pamirmoto.com) provides the Honda CRF300L motorcycles, the ride leader and the mechanic. You can see the bikes, rental terms and their other motorcycle tours on pamirmoto.com."
+      }
+    ],
+    "destinations": [
+      "khorog",
+      "wakhan-ishkashim",
+      "murgab",
+      "karakul",
       "bartang"
     ]
   }

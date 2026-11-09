@@ -208,10 +208,11 @@ const uploaded = (src: string) => src.startsWith('/api/media') || src.startsWith
  * (keeping its order, visibility, rating, any uploaded photos and, when the programme has no price, the old price);
  * a new programme is appended. Running it twice changes nothing.
  */
-export function applyOperatorTours(list: StoredTour[]): StoredTour[] {
+export function applyOperatorTours(list: StoredTour[], only?: ReadonlySet<string>): StoredTour[] {
   const result = [...list];
   let nextSort = result.reduce((max, tour) => Math.max(max, tour.sort), -1) + 1;
   for (const source of operatorTours) {
+    if (only && !only.has(source.slug)) continue;
     const index = result.findIndex((tour) => tour.slug === source.slug);
     const current = index >= 0 ? result[index] : null;
     const keepPhotos = current && current.gallery.some((photo) => uploaded(photo.src));
