@@ -4,7 +4,6 @@ import { Finder } from '@/components/home/Finder';
 import { DestinationShowcase } from '@/components/home/DestinationShowcase';
 import { WhyChoose } from '@/components/home/WhyChoose';
 import { TeamSection } from '@/components/home/TeamSection';
-import { ReviewSection } from '@/components/home/ReviewSection';
 import { BookingSection } from '@/components/home/BookingSection';
 import { createMetadata } from '@/lib/seo';
 import { toHomeCard } from '@/lib/tour-record';
@@ -17,7 +16,8 @@ export const metadata: Metadata = createMetadata({
   path: '/',
 });
 
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
 
 export default async function Home() {
   const tours = await listPublished();
@@ -29,7 +29,6 @@ export default async function Home() {
       <DestinationShowcase />
       <WhyChoose />
       <TeamSection />
-      <ReviewSection />
       <BookingSection tours={choices} />
     </ExpeditionProvider>
   </main>;

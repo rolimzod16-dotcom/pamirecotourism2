@@ -6,6 +6,7 @@ import { SiteImage as Image } from '@/components/SiteImage';
 import { createMetadata, siteUrl } from '@/lib/seo';
 import { toPublicTour } from '@/lib/tour-record';
 import { listPublished } from '@/lib/tour-store';
+import { tourSearchTitle } from '@/lib/seo-titles';
 import { routesCopy as c } from '@/content/routes';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { Accordion } from '@/components/Accordion';
@@ -15,13 +16,14 @@ import { TourCard } from '@/components/TourCard';
 import { Reveal } from '@/components/Reveal';
 import { PhotoGrid } from '@/components/PhotoGrid';
 import { Money } from '@/components/Money';
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
+export async function generateStaticParams() { return (await listPublished()).map((item) => ({ slug: item.slug })); }
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const stored = (await listPublished()).find((item) => item.slug === params.slug); if (!stored) return {};
   const tour = toPublicTour(stored);
-  const length = tour.days ? `${tour.days}-Day ` : '';
   const price = typeof tour.price === 'number' ? ` From $${tour.price} per person.` : '';
-  return createMetadata({ title: `${tour.title}: ${length}Tour in Tajikistan`, description: `${tour.hook}${price} Local guides from Rushan, small groups.`, path: `/tours/${tour.slug}`, image: tour.gallery[0] });
+  return createMetadata({ title: tourSearchTitle(tour.slug, tour.title, tour.days), description: `${price ? (tour.hook.length > 118 ? `${tour.hook.slice(0, tour.hook.lastIndexOf(' ', 116))}…` : tour.hook) : tour.hook}${price}`, path: `/tours/${tour.slug}`, image: tour.gallery[0] });
 }
 export default async function TourDetail({ params }: { params: { slug: string } }) {
   const published = await listPublished();
@@ -37,7 +39,7 @@ export default async function TourDetail({ params }: { params: { slug: string } 
   const related = published.filter((item) => item.slug !== tour.slug && item.category === tour.category).slice(0, 3).map(toPublicTour);
   const url = `${siteUrl}/tours/${tour.slug}`;
   const jsonLd = [
-    { '@context': 'https://schema.org', '@type': 'TouristTrip', name: tour.title, description: tour.overview || tour.hook, url, image: tour.gallery[0]?.startsWith('http') ? tour.gallery[0] : `${siteUrl}${tour.gallery[0] ?? ''}`, provider: { '@type': 'TravelAgency', name: 'Pamir Ecotourism', url: siteUrl }, ...(typeof tour.price === 'number' && { offers: { '@type': 'Offer', price: tour.price, priceCurrency: 'USD', availability: 'https://schema.org/InStock', url } }), ...(tour.itinerary.length > 0 && { itinerary: { '@type': 'ItemList', numberOfItems: tour.itinerary.length, itemListElement: tour.itinerary.map((day) => ({ '@type': 'ListItem', position: day.day, item: { '@type': 'TouristAttraction', name: day.title, ...(day.description && { description: day.description }) } })) } }) },
+    { '@context': 'https://schema.org', '@type': 'TouristTrip', name: tour.title, description: tour.overview || tour.hook, url, image: tour.gallery[0]?.startsWith('http') ? tour.gallery[0] : `${siteUrl}${tour.gallery[0] ?? ''}`, provider: { '@type': 'TravelAgency', '@id': `${siteUrl}/#organization`, name: 'Pamir Ecotourism', url: siteUrl }, ...(typeof tour.price === 'number' && { offers: { '@type': 'Offer', price: tour.price, priceCurrency: 'USD', availability: 'https://schema.org/InStock', url } }), ...(tour.itinerary.length > 0 && { itinerary: { '@type': 'ItemList', numberOfItems: tour.itinerary.length, itemListElement: tour.itinerary.map((day) => ({ '@type': 'ListItem', position: day.day, item: { '@type': 'TouristAttraction', name: day.title, ...(day.description && { description: day.description }) } })) } }) },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: c.common.home, item: `${siteUrl}/` }, { '@type': 'ListItem', position: 2, name: c.common.tours, item: `${siteUrl}/tours` }, { '@type': 'ListItem', position: 3, name: tour.title, item: url }] },
   ];
   return <main id="main-content" className="pb-20 lg:pb-0"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />

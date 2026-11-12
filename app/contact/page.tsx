@@ -10,7 +10,8 @@ import { createMetadata } from '@/lib/seo';
 import { listPublished } from '@/lib/tour-store';
 const c = pages.contact;
 export const metadata: Metadata = createMetadata({ title: 'Contact Us — Plan Your Pamir Trip', description: 'Ask the local team about Pamir Highway tours, treks, permits and dates. Reach us on WhatsApp or email, in English or Russian.', path: '/contact' });
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
 export default async function ContactPage() {
   const activities = (await listPublished()).map((tour) => ({ slug: tour.slug, title: tour.title }));
   return <main id="main-content"><RouteHero eyebrow={c.eyebrow} title={c.title} intro={c.intro} image={placePhotos['wakhan-ishkashim'][0].src} /><InquiryForm activities={activities} />

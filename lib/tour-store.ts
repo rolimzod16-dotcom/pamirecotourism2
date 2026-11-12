@@ -109,17 +109,35 @@ async function writeMigrations(done: string[]) {
 }
 
 /** Writes the operator's tour programmes into an existing catalog once, so later admin edits are kept. */
+/** Records finished one-time catalog changes, re-reading first so parallel jobs keep each other's marks. */
+export async function markMigrations(versions: string[]) {
+  const current = (await readMigrations()) ?? [];
+  await writeMigrations([...new Set([...current, ...versions])]);
+}
+
+export async function pendingMigration(version: string) {
+  if (storageMode() === 'off') return false;
+  const done = await readMigrations();
+  return done !== null && !done.includes(version);
+}
+
+// Tours with no programme yet: hidden (not deleted) until the operator sends their itineraries.
+const HIDE_EMPTY_TOURS = { version: 'hide-empty-tours-2026-11', slugs: ['freezing-wall-trekking', 'pamir-trail-section-8-9', 'ancient-traditions-cities'] };
+
 async function migrateCatalog(stored: StoredTour[]): Promise<StoredTour[]> {
   if (storageMode() === 'off') return stored;
   const done = await readMigrations();
   if (done === null) return stored;
   const pending = OPERATOR_TOUR_RELEASES.filter((release) => !done.includes(release.version));
-  if (!pending.length) return stored;
-  const next = applyOperatorTours(stored, new Set(pending.flatMap((release) => release.slugs)));
+  const hide = !done.includes(HIDE_EMPTY_TOURS.version);
+  if (!pending.length && !hide) return stored;
+  let next = pending.length ? applyOperatorTours(stored, new Set(pending.flatMap((release) => release.slugs))) : stored;
+  if (hide) next = next.map((tour) => (HIDE_EMPTY_TOURS.slugs.includes(tour.slug) ? { ...tour, published: false } : tour));
+  const versions = [...pending.map((release) => release.version), ...(hide ? [HIDE_EMPTY_TOURS.version] : [])];
   try {
     await enqueue(async () => {
       await writeCatalog(next);
-      await writeMigrations([...done, ...pending.map((release) => release.version)]);
+      await markMigrations(versions);
     });
   } catch (error) {
     console.error('Tour catalog migration failed', error instanceof Error ? error.message : 'error');

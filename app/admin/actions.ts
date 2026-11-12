@@ -28,12 +28,9 @@ async function requireAdmin() {
   if (!(await signedIn())) redirect('/admin/login');
 }
 
-function refresh(slug?: string) {
-  revalidatePath('/');
-  revalidatePath('/tours');
-  revalidatePath('/contact');
-  revalidatePath('/destinations');
-  if (slug) revalidatePath(`/tours/${slug}`);
+// Tours appear on the home page, catalog, destination pages, contact form and sitemap: refresh every cached page.
+function refresh() {
+  revalidatePath('/', 'layout');
 }
 
 export async function loginAction(formData: FormData) {
@@ -87,7 +84,7 @@ export async function saveTourAction(input: unknown, creating: boolean): Promise
   const next = creating ? [...all, tour] : all.map((item) => item.slug === tour.slug ? tour : item);
   try { await saveTours(next); }
   catch (error) { return { error: error instanceof Error ? error.message : 'Не удалось сохранить.' }; }
-  refresh(tour.slug);
+  refresh();
   redirect(creating ? '/admin?saved=1' : `/admin/tours/${tour.slug}?saved=1`);
 }
 
@@ -98,7 +95,7 @@ export async function deleteTourAction(formData: FormData) {
   if (!all.some((tour) => tour.slug === slug)) redirect('/admin');
   try { await saveTours(all.filter((tour) => tour.slug !== slug)); }
   catch { redirect('/admin?error=save'); }
-  refresh(slug);
+  refresh();
   redirect('/admin?deleted=1');
 }
 
@@ -115,7 +112,7 @@ export async function moveTourAction(formData: FormData) {
   const next: StoredTour[] = all.map((tour, sort) => ({ ...tour, sort }));
   try { await saveTours(next); }
   catch { redirect('/admin?error=save'); }
-  refresh(slug);
+  refresh();
   redirect('/admin');
 }
 

@@ -5,7 +5,9 @@ import { createMetadata } from '@/lib/seo';
 import { motoSides } from '@/lib/moto-record';
 import { listPublishedMotorcycles } from '@/lib/moto-store';
 
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
+export async function generateStaticParams() { return (await listPublishedMotorcycles()).map((item) => ({ slug: item.slug })); }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const motorcycle = (await listPublishedMotorcycles()).find((item) => item.slug === params.slug);

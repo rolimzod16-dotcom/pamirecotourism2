@@ -14,9 +14,8 @@ async function requireAdmin() {
   if (!secret || !token || !(await verifyAdminToken(token, secret))) redirect('/admin/login');
 }
 
-function refresh(slug?: string) {
-  revalidatePath('/motorcycles');
-  if (slug) revalidatePath(`/motorcycles/${slug}`);
+function refresh() {
+  revalidatePath('/', 'layout');
 }
 
 export async function saveMotoAction(input: unknown, creating: boolean): Promise<{ error: string }> {
@@ -55,7 +54,7 @@ export async function saveMotoAction(input: unknown, creating: boolean): Promise
   const next = creating ? [...all, motorcycle] : all.map((item) => item.slug === motorcycle.slug ? motorcycle : item);
   try { await saveMotorcycles(next); }
   catch (error) { return { error: error instanceof Error ? error.message : 'Не удалось сохранить.' }; }
-  refresh(motorcycle.slug);
+  refresh();
   redirect(creating ? '/admin/motorcycles?saved=1' : `/admin/motorcycles/${motorcycle.slug}?saved=1`);
 }
 
@@ -66,7 +65,7 @@ export async function deleteMotoAction(formData: FormData) {
   if (!all.some((item) => item.slug === slug)) redirect('/admin/motorcycles');
   try { await saveMotorcycles(all.filter((item) => item.slug !== slug)); }
   catch { redirect('/admin/motorcycles?error=save'); }
-  refresh(slug);
+  refresh();
   redirect('/admin/motorcycles?deleted=1');
 }
 
@@ -83,6 +82,6 @@ export async function moveMotoAction(formData: FormData) {
   const next: StoredMoto[] = all.map((motorcycle, sort) => ({ ...motorcycle, sort }));
   try { await saveMotorcycles(next); }
   catch { redirect('/admin/motorcycles?error=save'); }
-  refresh(slug);
+  refresh();
   redirect('/admin/motorcycles');
 }

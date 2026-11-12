@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowUpRight, Compass, Mountain, MapPin } from 'lucide-react';
 import { createMetadata, siteUrl } from '@/lib/seo';
 import { destinations } from '@/data/destinations';
+import { destinationSearchTitles } from '@/lib/seo-titles';
 import { placePhotos } from '@/data/photos';
 import { toPublicTour } from '@/lib/tour-record';
 import { listPublished } from '@/lib/tour-store';
@@ -17,9 +18,10 @@ const icons = [Mountain, Compass, MapPin];
 export function generateStaticParams() { return destinations.map((place) => ({ slug: place.slug })); }
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const place = findDestination(params.slug); if (!place) return {};
-  return createMetadata({ title: `${place.name}, Tajikistan: Travel Guide & Tours`, description: place.description, path: `/destinations/${place.slug}`, image: place.image });
+  return createMetadata({ title: destinationSearchTitles[place.slug] ?? `${place.name}, Tajikistan: Travel Guide`, description: place.description, path: `/destinations/${place.slug}`, image: place.image });
 }
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
 export default async function DestinationDetail({ params }: { params: { slug: string } }) {
   const place = findDestination(params.slug); if (!place) notFound();
   const photos = placePhotos[place.slug] ?? [];

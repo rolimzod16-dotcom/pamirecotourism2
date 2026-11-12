@@ -2,7 +2,7 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { SiteImage as Image } from '@/components/SiteImage';
 import Link from 'next/link';
-import { Award, CalendarDays, Car, Compass, Footprints, House, MapPin, Mountain, Search, ShieldCheck, Star, Users, type LucideIcon } from 'lucide-react';
+import { Award, CalendarDays, Car, Compass, Footprints, House, MapPin, Mountain, Search, ShieldCheck, Users, type LucideIcon } from 'lucide-react';
 import { catalogTours, tourPrice, type CatalogTour } from '@/content/expedition-home';
 type HomeTour = CatalogTour & { priceAmount?: string; priceCaption?: string; priceUsd?: number | null };
 import { heroSlides } from '@/data/photos';
@@ -57,12 +57,12 @@ export function Finder({ tours = catalogTours }: { tours?: HomeTour[] }) {
           <ShieldCheck size={18} className="shrink-0 text-leaf" aria-hidden="true" />
           <span className="font-display text-[11px] font-bold uppercase tracking-widest text-pine">Roof of the World • Direct Local Outfitter</span>
         </div>
-        <h1 id="hero-title" className="w-full max-w-4xl text-balance font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-[56px] lg:leading-[64px]">Unforgettable Expeditions Across the Roof of the World</h1>
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-sand">Discover pristine alpine lakes, jagged peaks, and authentic Silk Road mountain hospitality in Tajikistan with local guides.</p>
+        <h1 id="hero-title" className="w-full max-w-4xl text-balance font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-[56px] lg:leading-[64px]">Pamir Tours with a Local Operator in Tajikistan</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-sand">Pamir Highway 4x4 journeys, Lake Sarez and Bartang treks and snow leopard expeditions, run by a local team from the Bartang Valley.</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-white/90 sm:gap-10">
           <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Award size={20} className="text-[#FFC98F]" aria-hidden="true" />11+ Years Expeditions</span>
           <span className="hidden h-1.5 w-1.5 rounded-full bg-white/30 sm:block" aria-hidden="true" />
-          <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Star size={20} className="fill-saffron text-saffron" aria-hidden="true" />4.9/5 Explorer Rating</span>
+          <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><MapPin size={20} className="text-[#FFC98F]" aria-hidden="true" />Based in the Bartang Valley</span>
           <span className="hidden h-1.5 w-1.5 rounded-full bg-white/30 sm:block" aria-hidden="true" />
           <span className="inline-flex items-center gap-2 font-display text-[13px] font-semibold text-sand"><Users size={20} className="text-[#FFC98F]" aria-hidden="true" />100% Community-Based</span>
         </div>
@@ -104,7 +104,7 @@ export function Finder({ tours = catalogTours }: { tours?: HomeTour[] }) {
               <div className="relative h-64 overflow-hidden">
                 <Image src={tour.image} alt={tour.imageAlt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div className="absolute left-4 top-4 flex gap-2"><span className="rounded-full bg-white/85 px-3 py-1 font-display text-[11px] font-bold text-pine shadow-sm backdrop-blur-md">{tour.badge}</span><span className={`rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${levelClass[tour.levelTone]}`}>{tour.level}</span></div>
-                <div className="absolute bottom-4 right-4 inline-flex items-center gap-1 rounded-lg bg-ink/75 px-3 py-1 font-display text-[11px] font-semibold text-white backdrop-blur-md"><Star size={14} className="fill-saffron text-saffron" aria-hidden="true" />{tour.rating}</div>
+                
               </div>
               <div className="flex flex-1 flex-col justify-between gap-6 p-6">
                 <div>

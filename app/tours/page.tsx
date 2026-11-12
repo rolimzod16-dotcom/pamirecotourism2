@@ -9,8 +9,9 @@ import { routesCopy as c } from '@/content/routes';
 import { tourPhotos } from '@/data/photos';
 import { toPublicTour } from '@/lib/tour-record';
 import { listPublished } from '@/lib/tour-store';
-export async function generateMetadata(): Promise<Metadata> { return createMetadata({ title: 'Pamir & Tajikistan Tours: 4x4, Trekking and Lakes', description: 'Pamir Highway 4x4 tours, Wakhan valley trips, Fann Mountains and alpine lake treks, run by a local team from Rushan. Compare routes, length and prices.', path: '/tours' }); }
-export const dynamic = 'force-dynamic';
+export async function generateMetadata(): Promise<Metadata> { return createMetadata({ title: 'Pamir Tours: 4x4, Treks, Lake Sarez & Wildlife', description: 'Pamir Highway 4x4 tours, Wakhan valley trips, Fann Mountains and alpine lake treks, run by a local team from Rushan. Compare routes, length and prices.', path: '/tours' }); }
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
 export default async function ToursPage() {
   const tours = (await listPublished()).map(toPublicTour);
   return <main id="main-content"><RouteHero eyebrow={c.tours.eyebrow} title={c.tours.title} intro={c.tours.intro} image={tours[0]?.gallery[0] ?? tourPhotos['pamir-highway-4x4'][0].src} /><section className="px-5 py-16 sm:px-8 lg:py-24"><div className="mx-auto max-w-content"><Suspense fallback={<p>{c.tours.results}</p>}><TourFilters tours={tours} /></Suspense></div></section><aside className="bg-navy px-5 py-14 text-white sm:px-8"><div className="mx-auto flex max-w-content flex-col gap-6 md:flex-row md:items-center md:justify-between"><div><h2 className="font-display text-3xl">{c.tours.ctaTitle}</h2><p className="mt-2 text-white/75">{c.tours.ctaText}</p></div><Link href="/#inquiry" className="inline-flex w-fit shrink-0 items-center gap-2 rounded-brand bg-gold px-6 py-3 font-semibold text-navy">{c.tours.ctaButton}<ArrowUpRight size={18} aria-hidden="true" /></Link></div></aside></main>;

@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { get, put } from '@vercel/blob';
 import { parseMotoList, type StoredMoto } from '@/lib/moto-record';
-import { storageMode } from '@/lib/tour-store';
+import { markMigrations, pendingMigration, storageMode } from '@/lib/tour-store';
 
 const catalogPath = 'catalog/motorcycles.json';
 const localCatalog = path.join(process.cwd(), '.data', 'motorcycles.json');
@@ -48,10 +48,29 @@ async function writeCatalog(motorcycles: StoredMoto[]) {
   });
 }
 
+// A test entry ("qwertyu") was published from the admin; hide it once, without deleting anything.
+const HIDE_TEST_ENTRIES = { version: 'hide-test-motorcycles-2026-11', slugs: ['qwertyu'] };
+
+async function hideTestEntries(stored: StoredMoto[]) {
+  if (!stored.some((item) => HIDE_TEST_ENTRIES.slugs.includes(item.slug) && item.published)) return stored;
+  if (!(await pendingMigration(HIDE_TEST_ENTRIES.version))) return stored;
+  const next = stored.map((item) => (HIDE_TEST_ENTRIES.slugs.includes(item.slug) ? { ...item, published: false } : item));
+  try {
+    await enqueue(async () => {
+      await writeCatalog(next);
+      await markMigrations([HIDE_TEST_ENTRIES.version]);
+    });
+  } catch (error) {
+    console.error('Motorcycle cleanup failed', error instanceof Error ? error.message : 'error');
+  }
+  return next;
+}
+
 export async function listMotorcycles() {
   const stored = await readCatalog();
   if (!Array.isArray(stored)) return [];
-  return [...stored].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title));
+  const clean = await hideTestEntries(stored);
+  return [...clean].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title));
 }
 
 export async function listPublishedMotorcycles() {

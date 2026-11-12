@@ -3,7 +3,8 @@ import { destinations } from '@/data/destinations';
 import { siteUrl } from '@/lib/seo';
 import { listPublishedMotorcycles } from '@/lib/moto-store';
 import { listPublished } from '@/lib/tour-store';
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
 type Entry = MetadataRoute.Sitemap[number];
 const absolute = (src: string) => (/^https?:\/\//.test(src) ? src : `${siteUrl}${src.startsWith('/') ? src : `/${src}`}`);
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

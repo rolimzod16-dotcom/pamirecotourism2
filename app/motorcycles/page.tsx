@@ -5,7 +5,8 @@ import { createMetadata } from '@/lib/seo';
 import { motoSides } from '@/lib/moto-record';
 import { listPublishedMotorcycles } from '@/lib/moto-store';
 
-export const dynamic = 'force-dynamic';
+// Cached and refreshed every 5 minutes; admin saves refresh the affected pages at once.
+export const revalidate = 300;
 export async function generateMetadata(): Promise<Metadata> {
   return createMetadata({ title: 'Motorcycle Rental for the Pamir Highway', description: 'Rent a motorcycle in Tajikistan for the Pamir Highway and Wakhan valley. Bikes listed by the local Pamir Ecotourism team, daily rates and support on request.', path: '/motorcycles' });
 }

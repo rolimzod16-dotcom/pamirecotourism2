@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import './globals.css';
 import 'leaflet/dist/leaflet.css';
@@ -11,11 +10,20 @@ import { site } from '@/data/site';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { CurrencyProvider } from '@/components/CurrencyProvider';
 import { getRates } from '@/lib/rates';
+import { SiteChrome } from '@/components/SiteChrome';
 const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const organizationLd = {
+  '@context': 'https://schema.org', '@type': 'TravelAgency', '@id': `${seo.url}/#organization`, name: seo.name, url: seo.url,
+  logo: `${seo.url}/logo-512.png`, image: `${seo.url}/opengraph-image`, description: seo.description,
+  telephone: site.phone, email: site.email,
+  address: { '@type': 'PostalAddress', streetAddress: site.address, addressLocality: 'Rushan district', addressRegion: 'Gorno-Badakhshan (GBAO)', addressCountry: 'TJ' },
+  areaServed: [{ '@type': 'Place', name: 'Pamir Mountains' }, { '@type': 'Country', name: 'Tajikistan' }],
+  knowsLanguage: ['en', 'ru', 'tg'],
+  ...(seo.sameAs.length && { sameAs: seo.sameAs }),
+};
 export const metadata: Metadata = createMetadata({ title: chrome.homeTitle, description: seo.description });
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const admin = (headers().get('x-pathname') ?? '').startsWith('/admin');
   const rates = await getRates();
-  return <html lang="en"><body className={`${display.variable} ${inter.variable}`}><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'TravelAgency', name: seo.name, url: seo.url, telephone: site.phone, email: site.email, address: { '@type': 'PostalAddress', streetAddress: site.address, addressCountry: 'TJ' }, sameAs: seo.sameAs }).replace(/</g, '\\u003c') }} /><CurrencyProvider rates={rates}>{admin ? children : <><Header />{children}<Footer /><WhatsAppButton /></>}</CurrencyProvider></body></html>;
+  return <html lang="en"><body className={`${display.variable} ${inter.variable}`}><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd).replace(/</g, '\\u003c') }} /><CurrencyProvider rates={rates}><SiteChrome header={<Header />} footer={<><Footer /><WhatsAppButton /></>}>{children}</SiteChrome></CurrencyProvider></body></html>;
 }
