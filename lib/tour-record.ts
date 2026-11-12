@@ -130,7 +130,7 @@ export function toHomeCard(tour: StoredTour): HomeCard {
     badge: tour.badge || (tour.days ? `${tour.days} days` : 'Dates on request'),
     level: tour.level || 'Moderate',
     levelTone: tour.levelTone,
-    rating: tour.rating,
+    rating: '', // ratings are not shown until real reviews exist
     image: cover?.src || tour.image || heroSlides[0].src,
     imageAlt: cover?.alt || tour.imageAlt || tour.title,
     regions: tour.regions,
